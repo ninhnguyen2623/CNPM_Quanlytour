@@ -53,13 +53,14 @@ DROP TABLE IF EXISTS place;
 -- Drop table `tour`
 --
 DROP TABLE IF EXISTS tour;
-DROP TABLE IF EXISTS region;
+
 
 --
 -- Drop table `hotel`
 --
 DROP TABLE IF EXISTS hotel;
-
+DROP TABLE IF EXISTS vehicle;
+DROP TABLE IF EXISTS region;
 --
 -- Drop table `user`
 --
@@ -123,24 +124,8 @@ ALTER TABLE user
 ADD CONSTRAINT fk_User_Group FOREIGN KEY (role_id)
 REFERENCES role (role_id) ON UPDATE CASCADE ON DELETE SET null;
 
---
--- Create table `hotel`
---
-CREATE TABLE hotel (
-  hotel_id int NOT NULL AUTO_INCREMENT,
-  hotel_name varchar(100) NOT NULL,
-  address text DEFAULT NULL,
-  tel varchar(100) DEFAULT NULL,
-  website varchar(100) DEFAULT NULL,
-  star tinyint DEFAULT 2,
-  PRIMARY KEY (hotel_id)
-)
-ENGINE = INNODB,
-AUTO_INCREMENT = 13,
-AVG_ROW_LENGTH = 8192;
 
 
---
 -- Create table `region`
 --
 CREATE TABLE region (
@@ -159,8 +144,42 @@ AVG_ROW_LENGTH = 5461;
 --
 ALTER TABLE region
 ADD UNIQUE INDEX region_code (region_code);
+--
+-- Create table `hotel`
+--
+CREATE TABLE hotel (
+  hotel_id int NOT NULL AUTO_INCREMENT,
+  hotel_name varchar(100) NOT NULL,
+  address text DEFAULT NULL,
+  tel varchar(100) DEFAULT NULL,
+  website varchar(100) DEFAULT NULL,
+  star tinyint DEFAULT 2,
+  region_code varchar(100),
+  PRIMARY KEY (hotel_id)
+)
+ENGINE = INNODB,
+AUTO_INCREMENT = 13,
+AVG_ROW_LENGTH = 8192;
 
+ALTER TABLE hotel
+ADD CONSTRAINT fk_Hotel_region FOREIGN KEY (region_code)
+REFERENCES region (region_code) ON UPDATE CASCADE ON DELETE SET null;
+--
+--
+-- Create table vehicle
+CREATE TABLE vehicle (
+	vehicle_id int NOT NULL AUTO_INCREMENT,
+    vehicle_name varchar(100) NOT NULL,
+    vehicle_type varchar(100) NOT NULL,
+    vehicle_status varchar(100) DEFAULT NULL,
+    vehicle_fix varchar(100) DEFAULT NULL,
+    PRIMARY KEY (vehicle_id)
+    
+)
 
+ENGINE = INNODB,
+AUTO_INCREMENT = 6,
+AVG_ROW_LENGTH = 8192;
 
 --
 -- Create table `tour`
@@ -169,6 +188,7 @@ CREATE TABLE tour (
   tour_id int NOT NULL AUTO_INCREMENT,
   tour_name varchar(100) NOT NULL,
   hotel_id int,
+  vehicle_id int,
   region_code varchar(100),
   price decimal(20, 4) NOT NULL,
   start_day date DEFAULT NULL,
@@ -194,6 +214,12 @@ REFERENCES hotel (hotel_id) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE tour
 ADD CONSTRAINT fk_Tour_Region FOREIGN KEY (region_code)
 REFERENCES region (region_code) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE tour
+ADD CONSTRAINT fk_Tour_Vehicle FOREIGN KEY (vehicle_id)
+REFERENCES vehicle (vehicle_id) ON DELETE SET NULL ON UPDATE CASCADE;
+
+
 
 
 --
@@ -401,57 +427,74 @@ INSERT INTO role VALUES
 -- Dumping data for table user
 --
 INSERT INTO user VALUES
-(1, 'admin', '123', 'admin', '0908133761', '0000-00-00', 'nam', 1, '2023-04-13 10:26:16'),
-(2, 'manager1', '123', 'nhân viên quản lý khách hàng', '0908133761', '0000-00-00', 'nữ', 2, '2023-04-13 10:26:16'),
-(3, 'manager2', '123', 'nhân viên kế toán', '0908133761', '0000-00-00', 'nữ', 3, '2023-04-13 10:26:16'),
-(4, 'manager3', '123', 'nhân viên quản lý tour', '0908133761', '0000-00-00', 'nam', 4, '2023-04-13 10:26:16');
+(1, 'admin', '123', 'admin', '0908133761', '2003-06-20', 'nam', 1, '2023-04-13 10:26:16'),
+(2, 'manager1', '123', 'nhân viên quản lý khách hàng', '0908133761', '2003-06-20', 'nữ', 2, '2023-04-13 10:26:16'),
+(3, 'manager2', '123', 'nhân viên kế toán', '0908133761', '2003-06-20', 'nữ', 3, '2023-04-13 10:26:16'),
+(4, 'manager3', '123', 'nhân viên quản lý tour', '0908133761', '2003-06-20', 'nam', 4, '2023-04-13 10:26:16');
 
--- 
--- Dumping data for table hotel
---
-INSERT INTO hotel VALUES
-(1, 'Thịnh Vượng', '11/2/3 Trần hưng đạo p12, quận10',  '0908133761', 'https://thinhvuong.vn/', 4),
-(2, 'Đâu cũng được', '11/2/4 tran bui duong p12, quận5',  '0908133761', 'https://daucungduoc.vn/', 3),
-(3, 'Mường Thanh Luxury', 'Nguyễn Văn Trỗi Quận Phú Nhuận',  '0908133761', 'https://muongthanhluxury.vn/', 3),
-(4, 'Silverland Jolie Hotel&spa', 'Thi Sách Quận 1',  '0908133761', 'https://silverland.vn/', 5),
-(5, 'New Word', 'Lê Lai, Quận 1',  '0908133761', 'https://newword.vn/', 3),
-(6, 'Equatorial', 'Trần Bình Trọng Quận 5',  '0908133761', 'https://Equatorial.vn/', 1),
-(7, 'Lâu Đài Tính Ái', '11/2/4 tran bui duong p12 quận5',  '0908133761', 'https://laudaitinhai.vn/', 5),
-(8, 'Khách Sạn Hoàng Hôn', 'Sơn La',  '0908133761', 'https://hoanghon.vn/', 5),
-(9, 'Khách Sạn Gold', 'Bình Dương',  '0908133761', 'https://gold.vn/', 4),
-(10, 'Khách Sạn Lucky', 'Quảng Bình',  '0908133761', 'https://lucky.vn/', 5),
-(11, 'Resort Diamond', 'Đồng Nai',  '0908133761', 'https://diamond.vn/', 2),
-(12, 'Khách Sạn SunGroup', 'Lâm Đồng',  '0908133761', 'https://sungroup.vn/', 3);
 
 -- 
 -- Dumping data for table region
 --
 INSERT INTO region VALUES
-(5, 'dalat'),
-(1, 'hue'),
-(2, 'nhatrang'),
+(1, 'dalat'),
+(2, 'hue'),
+(3, 'nhatrang'),
 (4, 'phuquoc'),
-(3, 'quangninh');
+(5, 'quangninh');
+-- 
+-- Dumping data for table hotel
+--
+INSERT INTO hotel VALUES
+(1, 'Thịnh Vượng', '11/2/3 Trần hưng đạo p12, quận10',  '0908133761', 'https://thinhvuong.vn/', 4,'hue'),
+(2, 'Đâu cũng được', '11/2/4 tran bui duong p12, quận5',  '0908133761', 'https://daucungduoc.vn/', 3,'hue'),
+(3, 'Mường Thanh Luxury', 'Nguyễn Văn Trỗi Quận Phú Nhuận',  '0908133761', 'https://muongthanhluxury.vn/', 3,'hue'),
+(4, 'Silverland Jolie Hotel&spa', 'Thi Sách Quận 1',  '0908133761', 'https://silverland.vn/', 5,'hue'),
+(5, 'New Word', 'Lê Lai, Quận 1',  '0908133761', 'https://newword.vn/', 3,'dalat'),
+(6, 'Equatorial', 'Trần Bình Trọng Quận 5',  '0908133761', 'https://Equatorial.vn/', 1,'dalat'),
+(7, 'Lâu Đài Tính Ái', '11/2/4 tran bui duong p12 quận5',  '0908133761', 'https://laudaitinhai.vn/', 5,'dalat'),
+(8, 'Khách Sạn Hoàng Hôn', 'Sơn La',  '0908133761', 'https://hoanghon.vn/', 5,'dalat'),
+(9, 'Khách Sạn Gold', 'Bình Dương',  '0908133761', 'https://gold.vn/', 4,'quangninh'),
+(10, 'Khách Sạn Lucky', 'Quảng Bình',  '0908133761', 'https://lucky.vn/', 5,'quangninh'),
+(11, 'Resort Diamond', 'Đồng Nai',  '0908133761', 'https://diamond.vn/', 2,'quangninh'),
+(12, 'Khách Sạn SunGroup', 'Lâm Đồng',  '0908133761', 'https://sungroup.vn/', 3,'quangninh'),
+(13, 'Regent Phú Quốc', 'Hà Tiên',  '0908133761', 'https://regentphuquoc.vn/', 3,'phuquoc'),
+(14, 'Melia Vinpearl Phu Quoc', 'Hà Tiên',  '0908133761', 'https://MeliaVinpearlPhu Quoc.vn/', 4,'phuquoc'),
+(15, 'Mövenpick Resort Waverly Phu Quoc', 'Hà Tiên',  '0908133761', 'https://MövenpickResortWaverlyPhuQuoc.vn/', 5,'phuquoc'),
+(16, ' La Veranda Resort Phú Quốc - Bộ sưu tập MGallery', 'Hà Tiên',  '0908133761', 'https://LaVerandaResortMGallery.vn/', 5,'phuquoc'),
+(17, ' Sol Phu Quoc', 'Hà Tiên',  '0908133761', 'https:// SolPhuQuoc.vn/', 5,'phuquoc');
+
+
 
 -- 
 -- Dumping data for table customer
 --
 INSERT INTO customer VALUES
-(1, 'Nguyễn Thị lé',  '0908133761', '0000-00-00', 'abc@gmai.com', '2023-04-14 00:15:54'),
-(2, 'Nguyễn Thị lé1',  '0908133761', '0000-00-00', 'ab1c@gmai.com', '2023-04-14 00:15:54'),
-(3, 'Nguyễn Thị lé2',  '0908133761', '0000-00-00', 'abc2@gmai.com', '2023-04-14 00:15:54'),
-(4, 'Nguyễn Thị lé3',  '0908133761', '0000-00-00', 'ab3c@gmai.com', '2023-04-14 00:15:54'),
-(5, 'Nguyễn Thị lé4',  '0908133761', '0000-00-00', 'abc4@gmai.com', '2023-04-14 00:15:54');
+(1, 'Nguyễn Thành Long',  '0908133761', '2000-06-11', 'long@gmai.com', '2023-04-14 00:15:54'),
+(2, 'Nguyễn Tấn Lộc',  '0908133761', '2003-06-12', 'loc12@gmai.com', '2023-04-14 00:15:54'),
+(3, 'Nguyễn Thị Thanh Lam',  '0908133761', '1996-05-13', 'lam34@gmai.com', '2023-04-14 00:15:54'),
+(4, 'Nguyễn Ái Nhân',  '0908133761', '2001-07-12', 'ainhan4@gmai.com', '2023-04-14 00:15:54'),
+(5, 'Trần Tuyết Nhi',  '0908133761', '2004-07-23', 'nhini@gmai.com', '2023-04-14 00:15:54');
 
+--
+-- dumping dât for table vehicle
+--
+INSERT INTO vehicle VALUES
+(1,'Taxi','oto','tốt','không'),
+(2,'Khách','oto','tốt','không'),
+(3,'Grap','xe máy','tốt','không'),
+(4,'Taxi','oto','xấu','sửa chữa'),
+(5,'khách','oto','tạm','sủa chữa'),
+(6,'Taxi','oto','tốt','bảo chì');
 -- 
 -- Dumping data for table tour
 --
 INSERT INTO tour VALUES
-(1, 'Du lịch huế',  1, 'hue',500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09'),
-(2, 'Du lịch đà lạt', 1,'dalat', 500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09'),
-(3, 'Du lịch nha trang', 1,'nhatrang', 500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09'),
-(4, 'Du lịch hạ long',  1,'quangninh', 500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09'),
-(5, 'Du lịch phú quốc', 1,'phuquoc', 500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09');
+(1, 'Du lịch huế',  1,'2', 'hue',500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09'),
+(2, 'Du lịch đà lạt', 1,'3','dalat', 500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09'),
+(3, 'Du lịch nha trang', 1,'5','nhatrang', 500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09'),
+(4, 'Du lịch hạ long',  1,'4','quangninh', 500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09'),
+(5, 'Du lịch phú quốc', 1,'1','phuquoc', 500000.0000, '2023-05-13', '2023-05-23', 'Hồ Chí Minh', 'abc', '2023-04-13 10:27:09');
 
 -- 
 -- Dumping data for table place
@@ -469,7 +512,7 @@ INSERT INTO place VALUES
 (10, 'QUE Garden Đà Lạt', 'Nếu yêu thích nghệ thuật cây cảnh bonsai, hãy ghé đến QUE Garden Đà Lạt, vườn bonsai lá kim lớn nhất Việt Nam. Đến , bạn ngỡ như mình đang ở đất nước mặt trời mọc, với những chậu cây bonsai được chăm sóc và uốn nắn kỹ lưỡng vô cùng đẹp mắt, bên cạnh hồ cá Koi đạt tiêu chuẩn Nhật Bản với hàng ngàn con cá Koi to khỏe. ', 'Phường 10, thành phố Đà Lạt, tỉnh Lâm Đồng', 'dalat','heqebquzmhjgtsapkfc2.webp'),
 (11, 'Thác Pongour Đà Lạt', ' được rất nhiều người biết đến bởi sự hùng vĩ, hoang sơ với hệ động thực vật đa dạng và được mệnh danh là Nam Thiên Đệ Nhất Thác', 'Thôn Tân Nghĩa, xã Ninh Gia, huyện Đức Trọng, tỉnh Lâm Đồng', 'dalat','thac-pongour-1_1689673738.jpg'),
 (12, 'Chợ Đêm Đà Lạt', 'Từ lâu, chợ đêm Đà Lạt đã thành điểm đến quen thuộc mà bất cứ ai khi đến du lịch Đà Lạt đều muốn lui tới. Chợ đêm Đà Lạt, hay còn được gọi là chợ Âm Phủ, tọa lạc ngay trung tâm thành phố, rất gần các bến xe khách và quảng trường thành phố. Chợ đêm nhộn nhịp cả trong nhà lẫn ngoài trời nên rất tiện lợi cho bạn ghé qua.', 'Đường Nguyễn Thị Minh Khai, phường 1, thành phố Đà Lạt, tỉnh Lâm Đồng', 'dalat','cap-nhat-cho-dem-da-lat-o-duong-nao-co-gi-thu-vi-5f3aafca8812e.jpg'),
-(13, 'Bảo tàng Quảng Ninh', 'Bảo tàng – thư viện Quảng Ninh được ví như viên ngọc đen quý báu, sáng lấp lánh bên vịnh Hạ Long. Với thiết kế phá cách, đơn giản mà sang trọng, tòa nhà vuông vức với toàn bộ bề mặt bên ngoài màu đen đã thu hút rất đông du khách du lịch Hạ Long tới tham quan, chụp ảnh. ', '', 'quangninh','bao tang lsu quan doi.jpg'),
+(13, 'Bảo tàng Quảng Ninh', 'Bảo tàng – thư viện Quảng Ninh được ví như viên ngọc đen quý báu, sáng lấp lánh bên vịnh Hạ Long. Với thiết kế phá cách, đơn giản mà sang trọng, tòa nhà vuông vức với toàn bộ bề mặt bên ngoài màu đen đã thu hút rất đông du khách du lịch Hạ Long tới tham quan, chụp ảnh. ', 'Thị trấn Lạc Dương, huyện Lạc Dương, tỉnh Lâm Đồng', 'quangninh','bao tang lsu quan doi.jpg'),
 (14, 'Vịnh Hạ Long', 'Với vẻ đẹp non nước hùng vĩ tựa tranh vẽ, vịnh Hạ Long được UNESCO công nhận là kỳ quan thiên nhiên thế giới. Sự hiện diện của hàng nghìn hòn đảo và hang động hoang sơ, đẹp kỳ bí cùng hệ sinh thái phong phú, vịnh Hạ Long đã trở thành điểm đến cực kỳ độc đáo mà bất kỳ du khách nào cũng muốn ghé thăm. Một hòn đảo, hang động nổi tiếng tại vịnh Hạ Long bạn có thể tham khảo như: hòn Gà Chọi, đảo Ngọc Vừng, hòn Con Cóc, đảo Ti Tốp, hang Sửng Sốt...', '', 'quangninh','kinh-nghiem-du-lich-vinh-ha-long-1.webp'),
 (15, 'Du lịch đảo Tuần Châu, Hạ Long', NULL, '', 'quangninh','download.jpeg'),
 (16, 'Vinpearl Land', NULL, '98B/13, Trần Phú, Lộc Thọ, Thành phố Nha Trang, Khánh Hòa', 'nhatrang','vinpeart_land.png'),
