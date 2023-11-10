@@ -54,12 +54,14 @@ public class Manager extends JFrame {
     private JPanel pnlAccManager;
     private JPanel pnlStatistical;
     private JPanel pnlExportExcel;
+    private JPanel pnlVehicleManager;
     private JLabel lblTourManager;
     private JLabel lblCusManager;
     private JLabel lblDesManager;
     private JLabel lblBillManager;
     private JLabel lblSerManager;
     private JLabel lblHotelManager;
+    private JLabel lblVehicleManager;
     private JLabel lblAccManager;
     private JLabel lblStatistical;
     private JLabel lblExportExcel;
@@ -71,14 +73,33 @@ public class Manager extends JFrame {
     private SerContent pnlSerContent;
     private HotelContent pnlHotelContent;
     private AccContent pnlAccContent;
+    private VehicleContent pnlVehicleContent;
     private JPanel pnlStatisticalContent;
     private JPanel pnlExportExcelContent;
     private JLabel lblNewLabel_1;
     private JPanel pnlLogOut;
     private JLabel lblIconLogOut;
 
-    public Manager(JPanel pnlZoom, JPanel pnlHome, JPanel pnlSetting, JPanel pnlLogOut, JLabel lblIconZoomOut, JLabel lblIconZoomIn, JLabel lblIconHome, JLabel lblIconSetting, JLabel lblIconLogOut, JPanel pnlTourManager, JPanel pnlCusManager, JPanel pnlDesManager, JPanel pnlBillManager, JPanel pnlSerManager, JPanel pnlHotelManager, JPanel pnlAccManager, JPanel pnlStatistical, JPanel pnlExportExcel, JLabel lblTourManager, JLabel lblCusManager, JLabel lblDesManager, JLabel lblBillManager, JLabel lblSerManager, JLabel lblHotelManager, JLabel lblAccManager, JLabel lblStatistical, JLabel lblExportExcel, CardLayout cardLayout, JPanel pnlMainContent, CardLayout cardLayoutEdit_ListTourDetail, CardLayout cardLayoutEdit_ListCusDetail, CardLayout cardLayoutEdit_ListDesDetail, CardLayout cardLayoutEdit_ListBillDetail, CardLayout cardLayoutEdit_ListSerDetail, CardLayout cardLayoutEdit_ListHotelDetail, CardLayout cardLayoutEdit_ListAccDetail, CardLayout cardLayoutEdit_ListStatisticalDetail, CardLayout cardLayoutEdit_ListExportExcelDetail, JButton btnEditTour, JButton btnListTour, JButton btnEditCus, JButton btnListCus, JPanel pnlEdit_ListTourDetail, JPanel pnlEdit_ListCusDetail, JButton btnEditHotel, JButton btnListHotel, JPanel pnlEdit_ListHotelDetail, JPanel pnlEdit_ListAccDetail, JButton btnEditAcc, JButton btnListAcc, JTextField txtSearchTour, JTextField txtSearchCus, JTextField txtSearchHotel, JTextField txtSearchAcc, JButton btnEditSer, JButton btnListSer, JTextField txtSearchSer, JPanel pnlEdit_ListSerDetail, JButton btnEditBill, JButton btnListBill, JPanel pnlEdit_ListBillDetail, JTextField txtSearchBill, JButton btnEditDes, JButton btnListDes, JPanel pnlEdit_ListDesDetail, JTextField txtSearchDes) {
+    public Manager(JPanel pnlZoom, JPanel pnlHome, JPanel pnlSetting, JPanel pnlLogOut, JLabel lblIconZoomOut, JLabel lblIconZoomIn, JLabel lblIconHome, 
+    		JLabel lblIconSetting, JLabel lblIconLogOut, 
+    		JPanel pnlTourManager, JPanel pnlCusManager, JPanel pnlDesManager,
+    		JPanel pnlBillManager, JPanel pnlSerManager, JPanel pnlHotelManager,JPanel pnlVehicleManager, JPanel pnlAccManager, JPanel pnlStatistical, 
+    		JPanel pnlExportExcel, JLabel lblTourManager,
+    		JLabel lblCusManager, JLabel lblDesManager, JLabel lblBillManager, JLabel lblSerManager, JLabel lblHotelManager,JLabel lblVehicleManager ,
+    		JLabel lblAccManager, JLabel lblStatistical, 
+    		JLabel lblExportExcel, CardLayout cardLayout, JPanel pnlMainContent, CardLayout cardLayoutEdit_ListTourDetail, CardLayout cardLayoutEdit_ListCusDetail,
+    		CardLayout cardLayoutEdit_ListDesDetail, 
+    		CardLayout cardLayoutEdit_ListBillDetail, CardLayout cardLayoutEdit_ListSerDetail, CardLayout cardLayoutEdit_ListHotelDetail,
+    		CardLayout cardLayoutEdit_ListAccDetail, CardLayout cardLayoutEdit_ListStatisticalDetail,
+    		CardLayout cardLayoutEdit_ListExportExcelDetail, JButton btnEditTour, JButton btnListTour, JButton btnEditCus, JButton btnListCus,
+    		JPanel pnlEdit_ListTourDetail, JPanel pnlEdit_ListCusDetail, JButton btnEditHotel, 
+    		JButton btnListHotel, JPanel pnlEdit_ListHotelDetail, JPanel pnlEdit_ListAccDetail, JButton btnEditAcc, JButton btnListAcc, JTextField txtSearchTour, 
+    		JTextField txtSearchCus, JTextField txtSearchHotel, JTextField txtSearchAcc, 
+    		JButton btnEditSer, JButton btnListSer, JTextField txtSearchSer, JPanel pnlEdit_ListSerDetail, JButton btnEditBill, JButton btnListBill,
+    		JPanel pnlEdit_ListBillDetail, JTextField txtSearchBill, JButton btnEditDes, JButton btnListDes,
+    		JPanel pnlEdit_ListDesDetail, JTextField txtSearchDes) {
 
+    	
         this.pnlZoom = pnlZoom;
         this.pnlHome = pnlHome;
         this.pnlSetting = pnlSetting;
@@ -95,6 +116,7 @@ public class Manager extends JFrame {
         this.pnlBillManager = pnlBillManager;
         this.pnlSerManager = pnlSerManager;
         this.pnlHotelManager = pnlHotelManager;
+        this.pnlVehicleManager = pnlVehicleManager;
         this.pnlAccManager = pnlAccManager;
         this.pnlStatistical = pnlStatistical;
         this.pnlExportExcel = pnlExportExcel;
@@ -104,6 +126,7 @@ public class Manager extends JFrame {
         this.lblBillManager = lblBillManager;
         this.lblSerManager = lblSerManager;
         this.lblHotelManager = lblHotelManager;
+        this.lblVehicleManager = lblVehicleManager;
         this.lblAccManager = lblAccManager;
         this.lblStatistical = lblStatistical;
         this.lblExportExcel = lblExportExcel;
@@ -249,7 +272,16 @@ public class Manager extends JFrame {
     public void setPnlHotelManager(JPanel pnlHotelManager) {
         this.pnlHotelManager = pnlHotelManager;
     }
-
+    
+    public JPanel getPnlVehicleManager() {
+        return pnlVehicleManager;
+    }
+    
+    public void setPnlVehicleManager(JPanel pnlVehicleManager) {
+    	this.pnlVehicleManager = pnlVehicleManager;
+    	
+    }
+    
     public JPanel getPnlAccManager() {
         return pnlAccManager;
     }
@@ -285,7 +317,7 @@ public class Manager extends JFrame {
     public JLabel getLblCusManager() {
         return lblCusManager;
     }
-
+    
     public void setLblCusManager(JLabel lblCusManager) {
         this.lblCusManager = lblCusManager;
     }
@@ -326,6 +358,15 @@ public class Manager extends JFrame {
         this.lblHotelManager = lblHotelManager;
     }
 
+    public JLabel getLblVehicleManager() {
+    	return lblVehicleManager;
+    }
+    
+    public void setLblVehicleManager(JLabel lblVehicleManager) {
+    	this.lblVehicleManager = lblVehicleManager;
+    }
+    
+    
     public JLabel getLblAccManager() {
         return lblAccManager;
     }
@@ -512,7 +553,7 @@ public class Manager extends JFrame {
         //Create pnlLogo into pnlMenuDetail at NORTH
         pnlLogo = new JPanel();
         pnlLogo.setBackground(new Color(66, 165, 243));
-        pnlLogo.setPreferredSize(new Dimension(10, 150));
+        pnlLogo.setPreferredSize(new Dimension(10, 145));
         pnlMenuDetail.add(pnlLogo, BorderLayout.NORTH);
         pnlLogo.setLayout(new BorderLayout(0, 0));
 
@@ -532,7 +573,7 @@ public class Manager extends JFrame {
         //Create pnlBottom into pnlMenuDetail at SOUTH
         pnlBottom = new JPanel();
         pnlBottom.setBackground(new Color(66, 165, 243));
-        pnlBottom.setPreferredSize(new Dimension(10, 83));
+        pnlBottom.setPreferredSize(new Dimension(10, 45));
         pnlMngList.add(pnlBottom, BorderLayout.SOUTH);
 
         //Create scrollMenuDeTail into pnlMngList at CENTER
@@ -546,7 +587,7 @@ public class Manager extends JFrame {
         pnlListDetail.setBackground(new Color(66, 165, 243));
         pnlListDetail.setAlignmentY(Component.TOP_ALIGNMENT);
         scrollMenuDeTail.setViewportView(pnlListDetail);
-        pnlListDetail.setLayout(new GridLayout(9, 1, 0, 0));
+        pnlListDetail.setLayout(new GridLayout(10, 1, 0, 0));
 	
 		/* 
 		Create pnlTourManager, pnlCusManager, pnlStaffManager, pnlBillManager, pnlSerManager,
@@ -587,6 +628,12 @@ public class Manager extends JFrame {
         pnlHotelManager.setBackground(new Color(66, 165, 243));
         pnlListDetail.add(pnlHotelManager);
         pnlHotelManager.setLayout(new GridLayout(0, 1, 0, 0));
+        
+        pnlVehicleManager = new JPanel();
+        pnlVehicleManager.setBounds(0, 3, 172, 34);
+        pnlVehicleManager.setBackground(new Color(66, 165, 243));
+        pnlListDetail.add(pnlVehicleManager);
+        pnlVehicleManager.setLayout(new GridLayout(0, 1, 0, 0));
 
         pnlAccManager = new JPanel();
         pnlAccManager.setBounds(0, 3, 172, 34);
@@ -610,7 +657,7 @@ public class Manager extends JFrame {
         lblTourManager = new JLabel("   Tour Manager");
         lblTourManager.setPreferredSize(new Dimension(76, 41));
 		lblTourManager.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/travel.png"))));
-        lblTourManager.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblTourManager.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblTourManager.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnlTourManager.add(lblTourManager);
         lblTourManager.addMouseListener(mouseListener);
@@ -618,7 +665,7 @@ public class Manager extends JFrame {
         lblCusManager = new JLabel("   Customer Manager");
         lblCusManager.setPreferredSize(new Dimension(76, 41));
 		lblCusManager.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/customer.png"))));
-        lblCusManager.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblCusManager.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblCusManager.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnlCusManager.add(lblCusManager);
         lblCusManager.addMouseListener(mouseListener);
@@ -626,7 +673,7 @@ public class Manager extends JFrame {
         lblDesManager = new JLabel("   Tourist attraction");
         lblDesManager.setPreferredSize(new Dimension(76, 41));
 		lblDesManager.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/destination.png"))));
-        lblDesManager.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblDesManager.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblDesManager.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnlDesManager.add(lblDesManager);
         lblDesManager.addMouseListener(mouseListener);
@@ -634,7 +681,7 @@ public class Manager extends JFrame {
         lblBillManager = new JLabel("   Bill Manager");
         lblBillManager.setPreferredSize(new Dimension(76, 41));
 		lblBillManager.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/ticket.png"))));
-        lblBillManager.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblBillManager.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblBillManager.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnlBillManager.add(lblBillManager);
         lblBillManager.addMouseListener(mouseListener);
@@ -642,7 +689,7 @@ public class Manager extends JFrame {
         lblSerManager = new JLabel("   Service Manager");
         lblSerManager.setPreferredSize(new Dimension(76, 41));
 		lblSerManager.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/service.png"))));
-        lblSerManager.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblSerManager.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblSerManager.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnlSerManager.add(lblSerManager);
         lblSerManager.addMouseListener(mouseListener);
@@ -650,15 +697,23 @@ public class Manager extends JFrame {
         lblHotelManager = new JLabel("   Hotel Manager");
         lblHotelManager.setPreferredSize(new Dimension(76, 41));
 		lblHotelManager.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/hotel.png"))));
-        lblHotelManager.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblHotelManager.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblHotelManager.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnlHotelManager.add(lblHotelManager);
         lblHotelManager.addMouseListener(mouseListener);
+        
+        lblVehicleManager = new JLabel("   Vehicle Manager");
+        lblVehicleManager.setPreferredSize(new Dimension(76, 41));
+        lblVehicleManager.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/vehicle.png"))));
+        lblVehicleManager.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblVehicleManager.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        pnlVehicleManager.add(lblVehicleManager);
+        lblVehicleManager.addMouseListener(mouseListener);
 
         lblAccManager = new JLabel("   Account Manager");
         lblAccManager.setPreferredSize(new Dimension(76, 41));
 		lblAccManager.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/account.png"))));
-        lblAccManager.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblAccManager.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblAccManager.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnlAccManager.add(lblAccManager);
         lblAccManager.addMouseListener(mouseListener);
@@ -666,7 +721,7 @@ public class Manager extends JFrame {
         lblStatistical = new JLabel("   Statistical");
         lblStatistical.setPreferredSize(new Dimension(76, 41));
 		lblStatistical.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/statistical.png"))));
-        lblStatistical.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblStatistical.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblStatistical.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnlStatistical.add(lblStatistical);
         lblStatistical.addMouseListener(mouseListener);
@@ -674,7 +729,7 @@ public class Manager extends JFrame {
         lblExportExcel = new JLabel("   Excel");
         lblExportExcel.setPreferredSize(new Dimension(76, 41));
 		lblExportExcel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/excel.png"))));
-        lblExportExcel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblExportExcel.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblExportExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnlExportExcel.add(lblExportExcel);
         lblExportExcel.addMouseListener(mouseListener);
@@ -711,7 +766,12 @@ public class Manager extends JFrame {
         // ------------------------------ Tạo form quản lý khách sạn ------------------------------
         pnlHotelContent = new HotelContent();
         pnlMainContent.add(pnlHotelContent, "pnlHotelContent");
-
+        
+        // ------------------------------ Tạo form quản lý xe -------------------------------------
+        pnlVehicleContent = new VehicleContent();
+        pnlMainContent.add(pnlVehicleContent, "pnlVehicleContent");
+        
+        
         // ------------------------------ Tạo form quản lý tài khoản ------------------------------
         pnlAccContent = new AccContent();
         pnlMainContent.add(pnlAccContent,"pnlAccContent");

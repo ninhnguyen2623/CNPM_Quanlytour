@@ -46,6 +46,8 @@ public class ManagerControl implements MouseListener{
 			manager.getCardLayout().show(manager.getPnlMainContent(), "pnlSerContent");
 		}else if(e.getSource() == manager.getLblHotelManager()){
 			manager.getCardLayout().show(manager.getPnlMainContent(), "pnlHotelContent");
+		}else if(e.getSource() == manager.getLblVehicleManager()){
+			manager.getCardLayout().show(manager.getPnlMainContent(), "pnlVehicleContent");
 		}else if(e.getSource() == manager.getLblAccManager()){
 			manager.getCardLayout().show(manager.getPnlMainContent(), "pnlAccContent");
 		}else if(e.getSource() == manager.getLblStatistical()){
@@ -81,6 +83,8 @@ public class ManagerControl implements MouseListener{
 			manager.getPnlSerManager().setBackground(new Color(187, 222, 251));
 		}else if(e.getSource() == manager.getLblHotelManager()){
 			manager.getPnlHotelManager().setBackground(new Color(187, 222, 251));	
+		}else if(e.getSource() == manager.getLblVehicleManager()){
+			manager.getPnlVehicleManager().setBackground(new Color(187, 222, 251));	
 		}else if(e.getSource() == manager.getLblAccManager()){
 			manager.getPnlAccManager().setBackground(new Color(187, 222, 251));	
 		}else if(e.getSource() == manager.getLblStatistical()) {
@@ -116,6 +120,8 @@ public class ManagerControl implements MouseListener{
 			manager.getPnlSerManager().setBackground(new Color(66, 165, 243));
 		}else if(e.getSource() == manager.getLblHotelManager()){
 			manager.getPnlHotelManager().setBackground(new Color(66, 165, 243));	
+		}else if(e.getSource() == manager.getLblVehicleManager()){
+			manager.getPnlVehicleManager().setBackground(new Color(66, 165, 243));	
 		}else if(e.getSource() == manager.getLblAccManager()){
 			manager.getPnlAccManager().setBackground(new Color(66, 165, 243));	
 		}else if(e.getSource() == manager.getLblStatistical()) {
@@ -150,7 +156,11 @@ public class ManagerControl implements MouseListener{
 			manager.getPnlSerManager().setBackground(new Color(144, 202, 249));
 		}else if(e.getSource() == manager.getLblHotelManager()){
 			manager.getPnlHotelManager().setBackground(new Color(144, 202, 249));	
-		}else if(e.getSource() == manager.getLblAccManager()){
+		}
+		else if(e.getSource() == manager.getLblVehicleManager()){
+			manager.getPnlVehicleManager().setBackground(new Color(144, 202, 249));	
+		}
+		else if(e.getSource() == manager.getLblAccManager()){
 			manager.getPnlAccManager().setBackground(new Color(144, 202, 249));	
 		}else if(e.getSource() == manager.getLblStatistical()) {
 			manager.getPnlStatistical().setBackground(new Color(144, 202, 249));
@@ -184,7 +194,11 @@ public class ManagerControl implements MouseListener{
 			manager.getPnlSerManager().setBackground(new Color(66, 165, 243));
 		}else if(e.getSource() == manager.getLblHotelManager()){
 			manager.getPnlHotelManager().setBackground(new Color(66, 165, 243));	
-		}else if(e.getSource() == manager.getLblAccManager()){
+		}
+		else if(e.getSource() == manager.getLblVehicleManager()){
+			manager.getPnlVehicleManager().setBackground(new Color(66, 165, 243));	
+		}
+		else if(e.getSource() == manager.getLblAccManager()){
 			manager.getPnlAccManager().setBackground(new Color(66, 165, 243));	
 		}else if(e.getSource() == manager.getLblStatistical()) {
 			manager.getPnlStatistical().setBackground(new Color(66, 165, 243));
