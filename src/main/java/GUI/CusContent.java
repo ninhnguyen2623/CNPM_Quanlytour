@@ -2,6 +2,8 @@ package GUI;
 
 import DAO.CustomerDAO;
 import DTO.CustomerDTO;
+import DTO.HotelDTO;
+
 import com.toedter.calendar.JDateChooser;
 
 import BUS.CustomerBUS;
@@ -401,6 +403,7 @@ public class CusContent extends JPanel{
         btnAddCus.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String idString = txtIdCus.getText();
+                CustomerBUS customerBUS = new CustomerBUS();
                 int idcs = 0 ;
                 if(isNumeric(idString)==true) {
                     idcs = Integer.parseInt(idString.trim());
@@ -416,14 +419,28 @@ public class CusContent extends JPanel{
                 String dateString = dddDateFormat.format(date1);
 
                 String emailString = txtEmailCus.getText().trim();
+                boolean checkidhotel = false;
+                ArrayList<CustomerDTO> csmdto = customerBUS.getAll();
+                for(CustomerDTO jjjjdfe:csmdto) {
+                	if(jjjjdfe.getCustomer_id()==idcs) {
+                		checkidhotel = true;
+                	}
+                }
                 if( isNumeric(idString)== false ) {
                     JOptionPane.showMessageDialog(null, "Định dạng id phải là số  !");
+                    return;
                 }
-                if(checkPhone(telString)==false) {
+                else if(checkidhotel==true) {
+                	JOptionPane.showMessageDialog(null, "id đã tồn tại vui lòng nhập số khác !");
+                	return;
+                }
+                else if(checkPhone(telString)==false) {
                     JOptionPane.showMessageDialog(null, "Định dạng số điện thoại không dúng  !");
+                    return;
                 }
-                if(isEmail(emailString)== false) {
+                else if(isEmail(emailString)== false) {
                     JOptionPane.showMessageDialog(null, "Định dạng email khong dung !");
+                    return;
                 }
                 else {
                     CustomerDTO csCustomerDTO = new CustomerDTO(idcs,nameString,telcs,dateString,emailString,"");
@@ -434,7 +451,6 @@ public class CusContent extends JPanel{
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
 //                        CustomerDAO.getInstance().add(csCustomerDTO);
-                    	CustomerBUS customerBUS = new CustomerBUS();
                     	customerBUS.add(csCustomerDTO);
                         ClassLoaddataCustomer();
                     }
@@ -497,14 +513,29 @@ public class CusContent extends JPanel{
                 String dateString = dddDateFormat.format(date1);
 
                 String emailString = txtEmailCus.getText().trim();
+                Boolean checkid = false;
+                CustomerBUS customerBUS= new CustomerBUS();
+                ArrayList<CustomerDTO> csmdto = customerBUS.getAll();
+                for(CustomerDTO jjjjdfe:csmdto) {
+                	if(jjjjdfe.getCustomer_id()==idcs) {
+                		checkid = true;
+                	}
+                }
                 if( isNumeric(idString)== false ) {
                     JOptionPane.showMessageDialog(null, "Định dạng id phải là số  !");
+                    return;
                 }
-                if(checkPhone(telString)==false) {
+                else if(checkid == false) {
+                	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhập lại !");
+                	 return;
+                }
+                else if(checkPhone(telString)==false) {
                     JOptionPane.showMessageDialog(null, "Định dạng số điện thoại không dúng  !");
+                    return;
                 }
-                if(isEmail(emailString)== false) {
+                else if(isEmail(emailString)== false) {
                     JOptionPane.showMessageDialog(null, "Định dạng email khong dung !");
+                    return;
                 }
                 else {
                     CustomerDTO csCustomerDTO = new CustomerDTO(idcs,nameString,telcs,dateString,emailString,"");
@@ -514,7 +545,6 @@ public class CusContent extends JPanel{
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
-                    	CustomerBUS customerBUS= new CustomerBUS();
                     	customerBUS.update(csCustomerDTO);
                         ClassLoaddataCustomer();
                     }
@@ -576,7 +606,9 @@ public class CusContent extends JPanel{
         model.addColumn("Create_At");
         CustomerBUS customerBUS = new CustomerBUS();
     	ArrayList<CustomerDTO> arrCustomer = customerBUS.getAll();
+    	int i = 0;
         for(CustomerDTO itemCustomer : arrCustomer ) {
+        	i++;
             model.addRow(new Object[] {
                     itemCustomer.getCustomer_id(),itemCustomer.getCustomer_name(),itemCustomer.getTel(),itemCustomer.getBirthday(),itemCustomer.getEmail(),itemCustomer.getCreate_at()
             });
@@ -587,6 +619,7 @@ public class CusContent extends JPanel{
         panel_3 = new JPanel();
         panel_3.setPreferredSize(new Dimension(50, 10));
         pnlContentCusDetail.add(panel_3, BorderLayout.EAST);
+        txtIdCus.setText(String.valueOf(i+1));
         getDataFromJtableCustomer();
 
     }
@@ -621,12 +654,17 @@ public class CusContent extends JPanel{
 
     }
     public  void  RefreshCustomer() {
-        txtIdCus.setText("");
         txtNameCus.setText("");
         txtPhoneCus.setText("");
         txtEmailCus.setText("");
         OldCus.setDate(null);
-
+        CustomerBUS customerBUS = new CustomerBUS();
+    	ArrayList<CustomerDTO> arrCustomer = customerBUS.getAll();
+    	int i = 0;
+        for(CustomerDTO itemCustomer : arrCustomer ) {
+        	i++;
+        }
+        txtIdCus.setText(String.valueOf(i+1));
         txtSearchCus.setText("");
     }
     public boolean checkPhone(String str){

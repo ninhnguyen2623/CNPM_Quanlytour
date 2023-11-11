@@ -25,6 +25,7 @@ public class HotelDAO implements DAO<HotelDTO> {
                 hotel.setTel(rs.getString("tel"));
                 hotel.setWebsite(rs.getString("website"));
                 hotel.setStar(rs.getInt("star"));
+                hotel.setRegion_code(rs.getString("region_code"));
                 arr.add(hotel);
             }
 
@@ -56,6 +57,7 @@ public class HotelDAO implements DAO<HotelDTO> {
                 hotel.setTel(rs.getString("tel"));
                 hotel.setWebsite(rs.getString("website"));
                 hotel.setStar(rs.getInt("star"));
+                hotel.setRegion_code(rs.getString("region_code"));
             }
             else return null;
 
@@ -76,8 +78,8 @@ public class HotelDAO implements DAO<HotelDTO> {
         try {
         	ConnectDatabase conndb = new ConnectDatabase();
 
-        	String query = " INSERT INTO hotel (hotel_id,hotel_name,address,tel,website,star)"
-					+ "VALUES (?,?,?,?,?,?)";
+        	String query = " INSERT INTO hotel (hotel_id,hotel_name,address,tel,website,star,region_code)"
+					+ "VALUES (?,?,?,?,?,?,?)";
             PreparedStatement st = conndb.getConnection().prepareStatement(query);
             st.setInt(1,HotelDTO.getHotel_id());
             st.setString(2, HotelDTO.getHotel_name());
@@ -85,6 +87,7 @@ public class HotelDAO implements DAO<HotelDTO> {
             st.setString(4,HotelDTO.getTel());
             st.setString(5,HotelDTO.getWebsite());
             st.setInt(6,HotelDTO.getStar());
+            st.setString(7, HotelDTO.getRegion_code());
             int checkRS = st.executeUpdate();
             if(checkRS> 0 ) {
             	System.out.println("Them thanh cong  !");
@@ -116,13 +119,15 @@ public class HotelDAO implements DAO<HotelDTO> {
                     "address=?," +
                     "tel=?," +
                     "website=?," +
-                    "star=? where hotel_id = " + HotelDTO.getHotel_id();
+                    "star=?," +
+                    "region_code=? where hotel_id = " + HotelDTO.getHotel_id();
             PreparedStatement st = conndb.getConnection().prepareStatement(query);
             st.setString(1, HotelDTO.getHotel_name());
             st.setString(2,HotelDTO.getAddress());
             st.setString(3,HotelDTO.getTel());
             st.setString(4,HotelDTO.getWebsite());
             st.setInt(5,HotelDTO.getStar());
+            st.setString(6, HotelDTO.getRegion_code());
             int checkRS = st.executeUpdate();
             if(checkRS> 0 ) {
             	System.out.println("update thanh cong  !");

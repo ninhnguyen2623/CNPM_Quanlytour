@@ -43,6 +43,8 @@ public class HotelContent extends JPanel {
     private JPanel pnlListHotel;
     private JPanel pnlStartHotel;
     private JLabel lblStartHotel;
+    private JPanel pnlRegionHotel;
+    private JLabel lblRegionHotel;
     private JPanel pnlPhoneHotel;
     private JLabel lblPhoneHotel;
     private JTextField txtPhoneHotel;
@@ -54,6 +56,7 @@ public class HotelContent extends JPanel {
     private JTextField txtAddressHotel;
     private JButton btnRefreshHotel;
     private JComboBox cbxStartHotel;
+    private JComboBox cbxRegionHotel;
     private JTable hotelListTable;
 
     private JScrollPane sclListHotel;
@@ -141,7 +144,8 @@ public class HotelContent extends JPanel {
                         String telhotelString = String.valueOf(hotelDTO.getTel());
                         txtPhoneHotel.setText(telhotelString);
                         txtWebHotel.setText(hotelDTO.getWebsite());
-                        cbxStartHotel.setSelectedItem(hotelDTO.getStar());
+                        cbxStartHotel.setSelectedItem(String.valueOf(hotelDTO.getStar()));
+                        cbxRegionHotel.setSelectedItem(hotelDTO.getRegion_code());
                     }
                     if(hotelDTO ==null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Hotel !");
@@ -164,7 +168,8 @@ public class HotelContent extends JPanel {
                             String telhotelString = String.valueOf(jjjHotelDTO.getTel());
                             txtPhoneHotel.setText(telhotelString);
                             txtWebHotel.setText(jjjHotelDTO.getWebsite());
-                            cbxStartHotel.setSelectedItem(jjjHotelDTO.getStar());
+                            cbxStartHotel.setSelectedItem(String.valueOf(jjjHotelDTO.getStar()));
+                            cbxRegionHotel.setSelectedItem(jjjHotelDTO.getRegion_code());
                             checkKQ = true;
                         }
                     }
@@ -250,7 +255,7 @@ public class HotelContent extends JPanel {
         pnlFillHotel = new JPanel();
         pnlFillHotel.setBorder(null);
         scrollFillInforHotel.setViewportView(pnlFillHotel);
-        pnlFillHotel.setLayout(new GridLayout(7, 1, 0, 0));
+        pnlFillHotel.setLayout(new GridLayout(8, 1, 0, 0));
 
         pnlIdHotel = new JPanel();
         pnlIdHotel.setPreferredSize(new Dimension(320, 35));
@@ -335,6 +340,20 @@ public class HotelContent extends JPanel {
         cbxStartHotel.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
         cbxStartHotel.setPreferredSize(new Dimension(225, 25));
         pnlStartHotel.add(cbxStartHotel);
+        
+        pnlRegionHotel = new JPanel();
+        pnlRegionHotel.setPreferredSize(new Dimension(320, 35));
+        pnlFillHotel.add(pnlRegionHotel);
+        pnlRegionHotel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        
+        lblRegionHotel = new JLabel("Region");
+        lblRegionHotel.setPreferredSize(new Dimension(125, 25));
+        pnlRegionHotel.add(lblRegionHotel);
+        
+        cbxRegionHotel = new JComboBox();
+        cbxRegionHotel.setModel(new DefaultComboBoxModel(new String[] {"hue", "quangninh", "dalat", "phuquoc"}));
+        cbxRegionHotel.setPreferredSize(new Dimension(225, 25));
+        pnlRegionHotel.add(cbxRegionHotel);
 
         pnlButtonHotel = new JPanel();
         pnlButtonHotel.setPreferredSize(new Dimension(10, 40));
@@ -358,18 +377,31 @@ public class HotelContent extends JPanel {
 
                 String webString = txtWebHotel.getText();
                 String cbxString =(String) cbxStartHotel.getSelectedItem();
+                String cbxregion = (String) cbxRegionHotel.getSelectedItem();
                 int starhotel = Integer.parseInt(cbxString);
+                HotelBUS hotelBUS = new HotelBUS();
+                Boolean checkid = false;
+                ArrayList<HotelDTO> kjkjk = hotelBUS.getAll();
+                for(HotelDTO iiii: kjkjk) {
+                	checkid = true;
+                }
                 if(idString == "" || nameString==""|| addressString==""|| telhotel==""|| webString=="") {
                     JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                    return;
                 }
-                if(checkPhone(telhotel)== false) {
+                else if(checkid == true) {
+                	 JOptionPane.showMessageDialog(null, "id đã tồn tại vui lòng nhập id mới !");
+                }
+                else if(checkPhone(telhotel)== false) {
                 	JOptionPane.showMessageDialog(null, "Số điện thoại không đúng !");
+                	return;
                 }
-                if(isURL(webString)== false) {
+                else if(isURL(webString)== false) {
                 	JOptionPane.showMessageDialog(null, "Đường dẫn website không đúng !");
+                	return;
                 }
                 else {
-                    HotelDTO hotelDTO = new HotelDTO(idhotel,nameString,addressString,telhotel,webString,starhotel);
+                    HotelDTO hotelDTO = new HotelDTO(idhotel,nameString,addressString,telhotel,webString,starhotel,cbxregion);
                     int result = JOptionPane.showConfirmDialog(null,
                             "Bạn có muốn them hotel  " +nameString,
                             "Xác nhận",
@@ -377,7 +409,6 @@ public class HotelContent extends JPanel {
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
 //                        HotelDAO.getInstance().add(hotelDTO);
-                    	HotelBUS hotelBUS = new HotelBUS();
                     	hotelBUS.add(hotelDTO);
                         ClassLoaddataHotel();
                     }
@@ -397,18 +428,31 @@ public class HotelContent extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String idString = txtIdHotel.getText().trim();
                 int idhotel = Integer.parseInt(idString);
-                int result = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc muốn xoa hotel id: " +idhotel,
-                        "Xác nhận",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-                if(result == JOptionPane.YES_OPTION){
-//                    HotelDAO.getInstance().delete(idhotel);
-                	HotelBUS hotelBUS = new HotelBUS();
-                	hotelBUS.delete(idhotel);
-                    ClassLoaddataHotel();
+                HotelBUS hotelBUS = new HotelBUS();
+                Boolean checkid = false;
+                ArrayList<HotelDTO> kjkjk = hotelBUS.getAll();
+                for(HotelDTO iiii: kjkjk) {
+                	if(iiii.getHotel_id()==idhotel) {
+                		checkid = true;
+                	}
                 }
-                RefreshHotel();
+                if(checkid == false) {
+                	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhâp id mới !");
+                }
+                else {
+                	int result = JOptionPane.showConfirmDialog(null,
+                            "Bạn có chắc muốn xoa hotel id: " +idhotel,
+                            "Xác nhận",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                    if(result == JOptionPane.YES_OPTION){
+//                        HotelDAO.getInstance().delete(idhotel);
+                    	hotelBUS.delete(idhotel);
+                        ClassLoaddataHotel();
+                    }
+                    RefreshHotel();
+                }
+                
             }
         });
         btnDeleteHotel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -434,25 +478,40 @@ public class HotelContent extends JPanel {
 
                 String webString = txtWebHotel.getText();
                 String cbxString =(String) cbxStartHotel.getSelectedItem();
+                String cbxregion = (String) cbxRegionHotel.getSelectedItem();
                 int starhotel = Integer.parseInt(cbxString);
+                HotelBUS hotelBUS = new HotelBUS();
+                Boolean checkid = false;
+                ArrayList<HotelDTO> kjkjk = hotelBUS.getAll();
+                for(HotelDTO iiii: kjkjk) {
+                	if(iiii.getHotel_id()==idhotel) {
+                		checkid = true;
+                	}
+                }
                 if(idString == "" || nameString==""|| addressString==""|| telhotel==""|| webString=="") {
                 	JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                	return;
                 }
-                if(checkPhone(telhotel)== false) {
+                else if(checkid == false) {
+                	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhâp id mới !");
+                	return;
+                }
+                else if(checkPhone(telhotel)== false) {
                 	JOptionPane.showMessageDialog(null, "Số điện thoại không đúng !");
+                	return;
                 }
-                if(isURL(webString)== false) {
+                else if(isURL(webString)== false) {
                 	JOptionPane.showMessageDialog(null, "Đường dẫn website không đúng !");
+                	return;
                 }
                 else {
-                    HotelDTO hotelDTO = new HotelDTO(idhotel,nameString,addressString,telhotel,webString,starhotel);
+                    HotelDTO hotelDTO = new HotelDTO(idhotel,nameString,addressString,telhotel,webString,starhotel,cbxregion);
                     int result = JOptionPane.showConfirmDialog(null,
                             "Bạn có muốn update hotel  " +nameString,
                             "Xác nhận",
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
-                    	HotelBUS hotelBUS = new HotelBUS();
                     	hotelBUS.update(hotelDTO);
                         ClassLoaddataHotel();
                     }
@@ -512,11 +571,14 @@ public class HotelContent extends JPanel {
         model.addColumn("Tell");
         model.addColumn("Website");
         model.addColumn("Star");
+        model.addColumn("Region_code");
         HotelBUS hotelBUS = new HotelBUS();
         ArrayList<HotelDTO> htDTO = hotelBUS.getAll();
+        int i = 0;
         for(HotelDTO itemHotel : htDTO) {
+        	i++;
             model.addRow(new Object[] {
-                    itemHotel.getHotel_id(),itemHotel.getHotel_name(),itemHotel.getAddress(),itemHotel.getTel(),itemHotel.getWebsite(),itemHotel.getStar()
+                    itemHotel.getHotel_id(),itemHotel.getHotel_name(),itemHotel.getAddress(),itemHotel.getTel(),itemHotel.getWebsite(),itemHotel.getStar(),itemHotel.getRegion_code()
             });
         }
         hotelListTable = new JTable();
@@ -526,6 +588,7 @@ public class HotelContent extends JPanel {
         panel_3.setPreferredSize(new Dimension(50, 10));
         pnlContentHotelDetail.add(panel_3, BorderLayout.EAST);
         getDataFromJtable();
+        txtIdHotel.setText(Integer.toString(i+1));
 
     }
     public void RefreshHotel() {
@@ -535,6 +598,13 @@ public class HotelContent extends JPanel {
         txtPhoneHotel.setText(" ");
         txtWebHotel.setText(" ");
         txtSearchHotel.setText("");
+        HotelBUS hotelBUS = new HotelBUS();
+        ArrayList<HotelDTO> htDTO = hotelBUS.getAll();
+        int i = 0;
+        for(HotelDTO itemHotel : htDTO) {
+        	i++;
+        }
+        txtIdHotel.setText(Integer.toString(i+1));
     }
     public void getDataFromJtable() {
         List<HotelDTO> hotelDTO = new ArrayList<HotelDTO>();
@@ -547,7 +617,9 @@ public class HotelContent extends JPanel {
                 String addressHotelString = model.getValueAt(i,2).toString();
                 String telhotel = model.getValueAt(i,3).toString();
                 String webHotelString = model.getValueAt(i,4).toString();
-                int starthotel = Integer.parseInt(model.getValueAt(i,5).toString());
+                String starthotel = model.getValueAt(i,5).toString();
+//                int starthotel = Integer.parseInt(model.getValueAt(i,5).toString());
+                String cbxregion = model.getValueAt(i,6).toString();
 //	        	add  table to txt
                 String idhotelString = String.valueOf(idhotel);
                 txtIdHotel.setText(idhotelString);
@@ -557,6 +629,7 @@ public class HotelContent extends JPanel {
                 txtPhoneHotel.setText(telhotelString);
                 txtWebHotel.setText(webHotelString);
                 cbxStartHotel.setSelectedItem(starthotel);
+                cbxRegionHotel.setSelectedItem(cbxregion);
             }
         });
 

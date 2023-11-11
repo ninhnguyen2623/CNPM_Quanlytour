@@ -293,8 +293,19 @@ public class SerContent extends JPanel {
                 String nameserString = txtNameSer.getText();
                 String serpriceString = txtPriceSer.getText().trim();
                 Double priceser = Double.parseDouble(serpriceString);
+                ServiceBUS serviceBUS = new ServiceBUS();
+                Boolean checkid = false;
+                ArrayList< ServiceDTO> jfjfe = serviceBUS.getAll();
+                for(ServiceDTO dfas: jfjfe) {
+                	if(dfas.getService_id()== idser) {
+                		checkid = true;
+                	}
+                }
                 if(nameserString==""|| serpriceString=="" ) {
                     JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                }
+                else if(checkid == true) {
+                	JOptionPane.showMessageDialog(null, "id đã tồn tại vui lòng nhập id mới !");
                 }
                 else {
                     ServiceDTO serviceDTO = new ServiceDTO(idser,nameserString,priceser);
@@ -305,7 +316,6 @@ public class SerContent extends JPanel {
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
 
-                        ServiceBUS serviceBUS = new ServiceBUS(); 
                         serviceBUS.add(serviceDTO);
                         ClassLoaddataService();
                     }
@@ -323,17 +333,30 @@ public class SerContent extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String idString = txtIdSer.getText().trim();
                 int idser = Integer.parseInt(idString);
-                int result = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc muốn xoa hotel id: " +idser,
-                        "Xác nhận",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-                if(result == JOptionPane.YES_OPTION){
-                	ServiceBUS serviceBUS = new ServiceBUS(); 
-                	serviceBUS.delete(idser);
-                    ClassLoaddataService();
+                ServiceBUS serviceBUS = new ServiceBUS(); 
+                Boolean checkid = false;
+                ArrayList< ServiceDTO> jfjfe = serviceBUS.getAll();
+                for(ServiceDTO dfas: jfjfe) {
+                	if(dfas.getService_id()== idser) {
+                		checkid = true;
+                	}
                 }
-                RefreshService();
+                if(checkid == false) {
+                	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhập id mới !");
+                }
+                else {
+                	int result = JOptionPane.showConfirmDialog(null,
+                            "Bạn có chắc muốn xoa hotel id: " +idser,
+                            "Xác nhận",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                    if(result == JOptionPane.YES_OPTION){
+                    	serviceBUS.delete(idser);
+                        ClassLoaddataService();
+                    }
+                    RefreshService();
+                }
+                
             }
         });
         btnDeleteSer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -362,8 +385,19 @@ public class SerContent extends JPanel {
                 String nameserString = txtNameSer.getText();
                 String serpriceString = txtPriceSer.getText().trim();
                 Double priceser = Double.parseDouble(serpriceString);
+                ServiceBUS serviceBUS = new ServiceBUS(); 
+                Boolean checkid = false;
+                ArrayList< ServiceDTO> jfjfe = serviceBUS.getAll();
+                for(ServiceDTO dfas: jfjfe) {
+                	if(dfas.getService_id()== idser) {
+                		checkid = true;
+                	}
+                }
                 if(nameserString==""|| serpriceString=="" ) {
-                    JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                	JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                }
+                else if(checkid == false) {
+                	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhập id mới !");
                 }
                 else {
                     ServiceDTO serviceDTO = new ServiceDTO(idser,nameserString,priceser);
@@ -373,7 +407,6 @@ public class SerContent extends JPanel {
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
-                    	ServiceBUS serviceBUS = new ServiceBUS(); 
                     	serviceBUS.update(serviceDTO);
                         ClassLoaddataService();
                     }
@@ -460,7 +493,9 @@ public class SerContent extends JPanel {
         model.addColumn("Price");
         ServiceBUS serviceBUS = new ServiceBUS(); 
         ArrayList<ServiceDTO> serDTO = serviceBUS .getAll();
+        int i = 0;
         for(ServiceDTO itemService : serDTO) {
+        	i++;
             model.addRow(new Object[] {
                     itemService.getService_id(),itemService.getService_name(),itemService.getService_price()
             });
@@ -472,12 +507,21 @@ public class SerContent extends JPanel {
         panel_3.setPreferredSize(new Dimension(50, 10));
         pnlContentSerDetail.add(panel_3, BorderLayout.EAST);
         getDataFromJtableSer();
+        txtIdSer.setText(Integer.toString(i+1));
 
     }
     public void RefreshService() {
         txtIdSer.setText(" ");
         txtNameSer.setText(" ");
         txtPriceSer.setText(" ");
+        ServiceBUS serviceBUS = new ServiceBUS(); 
+        ArrayList<ServiceDTO> serDTO = serviceBUS .getAll();
+        int i = 0;
+        for(ServiceDTO itemService : serDTO) {
+        	i++;
+           
+        }
+        txtIdSer.setText(Integer.toString(i+1));
     }
     public void getDataFromJtableSer() {
         List<ServiceDTO> serviceDTO = new ArrayList<ServiceDTO>();

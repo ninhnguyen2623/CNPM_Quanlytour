@@ -145,6 +145,7 @@ public class DesContent extends JPanel{
                         txtNameDes.setText(desDTO.getPlace_name());
                         txtDescribeDes.setText(desDTO.getPlace_describe());
                         txtAddressDes.setText(desDTO.getPlace_address());
+                        cmbRegionCode.setSelectedItem(desDTO.getRegion_code());
                     }
                     if(desDTO == null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Place !");
@@ -164,6 +165,7 @@ public class DesContent extends JPanel{
                             txtNameDes.setText(itemDesDTO.getPlace_name());
                             txtDescribeDes.setText(itemDesDTO.getPlace_describe());
                             txtAddressDes.setText(itemDesDTO.getPlace_address());
+                            cmbRegionCode.setSelectedItem(itemDesDTO.getRegion_code());
 
                             checkKQ = true;
                         }
@@ -332,8 +334,19 @@ public class DesContent extends JPanel{
                 String  regioncodeDesString = (String)cmbRegionCode.getSelectedItem();
                 String valuecoderegion = cmbRegionCode.getSelectedItem().toString();
                 String addressDesString = txtAddressDes.getText();
+                PlaceBUS placeBUS = new PlaceBUS();
+                Boolean checkid = false;
+                ArrayList<PlaceDTO> pladto = placeBUS.getAll();
+                for(PlaceDTO ffdfde: pladto) {
+                	if(ffdfde.getPlace_id()==iddes) {
+                		checkid = true;
+                	}
+                }
                 if(namedesString==""|| describeDesString =="" || addressDesString == "" ) {
                     JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                }
+                else if(checkid == true) {
+                	 JOptionPane.showMessageDialog(null, "id đã tồn tại vui lòng nhập id mới !");
                 }
                 else {
                     PlaceDTO PlaceDTO = new PlaceDTO(iddes,namedesString,describeDesString,valuecoderegion,addressDesString);
@@ -343,7 +356,6 @@ public class DesContent extends JPanel{
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
-                    	PlaceBUS placeBUS = new PlaceBUS();
                     	placeBUS.add(PlaceDTO);
                         ClassLoaddataDes();
                     }
@@ -362,17 +374,30 @@ public class DesContent extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 String idString = txtIdDes.getText().trim();
                 int iddes = Integer.parseInt(idString);
-                int result = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc muốn xoa place id: " +iddes,
-                        "Xác nhận",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-                if(result == JOptionPane.YES_OPTION){
-                	PlaceBUS placeBUS = new PlaceBUS();
-                	placeBUS.delete(iddes);
-                    ClassLoaddataDes();
+                Boolean checkid = false;
+                PlaceBUS placeBUS = new PlaceBUS();
+                ArrayList<PlaceDTO> pladto = placeBUS.getAll();
+                for(PlaceDTO ffdfde: pladto) {
+                	if(ffdfde.getPlace_id()==iddes) {
+                		checkid = true;
+                	}
                 }
-                RefreshDes();
+                if(checkid == false) {
+                	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhập lại id mới !");
+                	return;
+                }
+                else {
+                	int result = JOptionPane.showConfirmDialog(null,
+                            "Bạn có chắc muốn xoa place id: " +iddes,
+                            "Xác nhận",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                    if(result == JOptionPane.YES_OPTION){
+                    	placeBUS.delete(iddes);
+                        ClassLoaddataDes();
+                    }
+                    RefreshDes();
+                }
             }
         });
         btnDeleteDes.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -403,8 +428,19 @@ public class DesContent extends JPanel{
                 String describeDesString = txtDescribeDes.getText();
                 String valuecoderegion = cmbRegionCode.getSelectedItem().toString();
                 String addressDesString = txtAddressDes.getText();
+                PlaceBUS placeBUS = new PlaceBUS();
+                Boolean checkid = false;
+                ArrayList<PlaceDTO> pladto = placeBUS.getAll();
+                for(PlaceDTO ffdfde: pladto) {
+                	if(ffdfde.getPlace_id()==iddes) {
+                		checkid = true;
+                	}
+                }
                 if(namedesString==""|| describeDesString =="" || addressDesString == "" ) {
                     JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                }
+                else if(checkid == false) {
+                	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhập lại id !");
                 }
                 else {
                     PlaceDTO PlaceDTO = new PlaceDTO(iddes,namedesString,describeDesString,valuecoderegion,addressDesString);
@@ -414,7 +450,6 @@ public class DesContent extends JPanel{
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     if(result == JOptionPane.YES_OPTION){
-                    	PlaceBUS placeBUS = new PlaceBUS();
                     	placeBUS.update(PlaceDTO);
                         ClassLoaddataDes();
                     }
@@ -468,7 +503,9 @@ public class DesContent extends JPanel{
         model.addColumn("Address");
         PlaceBUS placeBUS = new PlaceBUS();
         ArrayList<PlaceDTO> desDTO = placeBUS.getAll();
+        int i = 0;
         for(PlaceDTO itemDes : desDTO) {
+        	i++;
             model.addRow(new Object[] {
                     itemDes.getPlace_id(),itemDes.getPlace_name(),itemDes.getPlace_describe(),itemDes.getRegion_code(),itemDes.getPlace_address()
             });
@@ -479,6 +516,7 @@ public class DesContent extends JPanel{
         panel_4 = new JPanel();
         panel_4.setPreferredSize(new Dimension(50, 10));
         pnlContentDesDetail.add(panel_4, BorderLayout.EAST);
+        txtIdDes.setText(Integer.toString(i+1));
         getDataFromJtableDes();
 
     }
@@ -487,6 +525,13 @@ public class DesContent extends JPanel{
         txtNameDes.setText(" ");
         txtDescribeDes.setText(" ");
         txtAddressDes.setText(" ");
+        PlaceBUS placeBUS = new PlaceBUS();
+        ArrayList<PlaceDTO> desDTO = placeBUS.getAll();
+        int i = 0;
+        for(PlaceDTO itemDes : desDTO) {
+        	i++;
+        }
+        txtIdDes.setText(Integer.toString(i+1));
     }
     public void getDataFromJtableDes() {
         List<PlaceDTO> placeDTO = new ArrayList<PlaceDTO>();
@@ -501,12 +546,12 @@ public class DesContent extends JPanel{
                 String addressDesString = model.getValueAt(i,4).toString();
 
 
-
                 String iddesString = String.valueOf(iddes);
                 txtIdDes.setText(iddesString);
                 txtNameDes.setText(nameDesString);
                 txtDescribeDes.setText(decribeDesString);
                 txtAddressDes.setText(addressDesString);
+                cmbRegionCode.setSelectedItem(coderegionString);
 
             }
         });

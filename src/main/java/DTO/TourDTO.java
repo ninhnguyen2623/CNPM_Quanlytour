@@ -26,14 +26,16 @@ public class TourDTO {
     private double price;
     private String start_day;
     private String end_day;
+    private int vehicle_id;
     private String departure_place;
     private String schedule_describe;
     private String create_at;
-    public TourDTO(int tour_id, String tour_name,  int hotel_id, double price, String start_day, String end_day, String departure_place, String schedule_describe, String create_at) {
+    public TourDTO(int tour_id, String tour_name,  int hotel_id,int vehicle_id, double price, String start_day, String end_day, String departure_place, String schedule_describe, String create_at) {
         this.tour_id = tour_id;
         this.tour_name = tour_name;
 
         this.hotel_id = hotel_id;
+        this.vehicle_id = vehicle_id;
         this.price = price;
         this.start_day = start_day;
         this.end_day = end_day;
@@ -42,7 +44,15 @@ public class TourDTO {
         this.create_at = create_at;
     }
 
-    public TourDTO() {
+    public int getVehicle_id() {
+		return vehicle_id;
+	}
+
+	public void setVehicle_id(int vehicle_id) {
+		this.vehicle_id = vehicle_id;
+	}
+
+	public TourDTO() {
 
     }
 

@@ -4,6 +4,7 @@ import BUS.HotelBUS;
 import BUS.PlaceBUS;
 import BUS.RegionBUS;
 import BUS.TourBUS;
+import BUS.VehicleBUS;
 import DAO.HotelDAO;
 import DTO.*;
 import com.toedter.calendar.JDateChooser;
@@ -65,6 +66,9 @@ public class TourContent extends JPanel{
     private JPanel pnlDesTour;
     private JLabel lblDesTour;
     private JComboBox cbxDesTour;
+    private JPanel pnlVehicle;
+    private JLabel lblVehicle;
+    private JComboBox cbxVehicle;
     private JPanel pnlHotel;
     private JLabel lblHotel;
     private JComboBox cbxHotel;
@@ -117,17 +121,6 @@ public class TourContent extends JPanel{
     }
 
     private void setUpTable() {
-        model_tour = new DefaultTableModel();
-        model_tour.addColumn("Id");
-        model_tour.addColumn("Name");
-        model_tour.addColumn("Hotel");
-        model_tour.addColumn("Region");
-        model_tour.addColumn("Price");
-        model_tour.addColumn("Start_day");
-        model_tour.addColumn("End_day");
-        model_tour.addColumn("Departure");
-        model_tour.addColumn("Descirbe");
-        model_tour.addColumn("Create at");
 
         model_place = new DefaultTableModel();
         model_place.addColumn("id");
@@ -351,6 +344,10 @@ public class TourContent extends JPanel{
         pnlDesTour.add(txtDesTour);
 
         btnDesTour = new JButton("Places");
+        btnDesTour.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
         btnDesTour.setFocusPainted(false);
         btnDesTour.setPreferredSize(new Dimension(75, 25));
         pnlDesTour.add(btnDesTour);
@@ -375,7 +372,21 @@ public class TourContent extends JPanel{
 //            }
 //        });
         pnlHotel.add(cbxHotel);
-
+        
+        pnlVehicle = new JPanel();
+        pnlVehicle.setPreferredSize(new Dimension(320, 35));
+        pnlFillTour.add(pnlVehicle);
+        pnlVehicle.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        
+        lblVehicle = new JLabel("Vehicle");
+        lblVehicle.setPreferredSize(new Dimension(125, 25));
+        pnlVehicle.add(lblVehicle);
+        
+        cbxVehicle = new JComboBox();
+        cbxVehicle.setPreferredSize(new Dimension(166, 25));
+        cbxVehicle.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+        pnlVehicle.add(cbxVehicle);
+        
         pnlPriceTour = new JPanel();
 
 
@@ -521,6 +532,18 @@ public class TourContent extends JPanel{
     // load data from database
     private void loadTourData() {
         // load tour table
+    	 model_tour = new DefaultTableModel();
+         model_tour.addColumn("Id");
+         model_tour.addColumn("Name");
+         model_tour.addColumn("Hotel");
+         model_tour.addColumn("Vehicle");
+         model_tour.addColumn("Region");
+         model_tour.addColumn("Price");
+         model_tour.addColumn("Start_day");
+         model_tour.addColumn("End_day");
+         model_tour.addColumn("Departure");
+         model_tour.addColumn("Descirbe");
+         model_tour.addColumn("Create at");
         TourBUS tb = new TourBUS();
         ArrayList<TourDTO> tours = tb.getAll();
         String new_id = String.valueOf(tours.get(tours.size()-1).getTour_id()+1);
@@ -530,6 +553,7 @@ public class TourContent extends JPanel{
                     tour.getTour_id(),
                     tour.getTour_name(),
                     tour.getHotel_id(),
+                    tour.getVehicle_id(),
                     tour.getRegion_code(),
                     tour.getPrice(),
                     tour.getStart_day(),
@@ -560,7 +584,14 @@ public class TourContent extends JPanel{
             model_region.addElement(region.getRegion_code());
         }
         cbxDesTour.setModel(model_region);
-
+        
+        DefaultComboBoxModel<String> model_vehicle = new DefaultComboBoxModel<String>();
+        VehicleBUS jj = new VehicleBUS();
+        ArrayList<VehicleDTO> vehicledto = jj.getAll();
+        for(VehicleDTO vvv: vehicledto) {
+        	model_vehicle.addElement(vvv.getVehicle_id() + "-" + vvv.getTenxe()+"-"+vvv.getSuachua());
+        }
+        cbxVehicle.setModel(model_vehicle);
     }
 
     private void btnInteract() {
@@ -606,6 +637,10 @@ public class TourContent extends JPanel{
                 btnRefreshTourActionPerformed(e);
             }
         });
+        
+        
+// place   ccccc
+        
         btnDesTour.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -634,6 +669,18 @@ public class TourContent extends JPanel{
                 int result = JOptionPane.showConfirmDialog(null, popup, "Choose Places",
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
+//                	check region code hotel
+                	String cbxregioncode = (String)cbxDesTour.getSelectedItem();
+                	DefaultComboBoxModel<String> model_hotel = new DefaultComboBoxModel<String>();
+                    HotelBUS ht = new HotelBUS();
+                    ArrayList<HotelDTO> hotels = ht.getAll();
+
+                    for (HotelDTO hotel : hotels) {
+                    	if(hotel.getRegion_code().equals(cbxregioncode)){
+                    		model_hotel.addElement(hotel.getHotel_id() + "-" + hotel.getHotel_name() +"-"+hotel.getRegion_code());
+                    	}
+                    }
+                    cbxHotel.setModel(model_hotel);
                     System.out.println("ok");
                     arrPlaces.clear();
                     for (JCheckBox cb : arrCheckBox) {
@@ -647,6 +694,8 @@ public class TourContent extends JPanel{
                 }
             }
         });
+        
+// region code 
         cbxDesTour.addItemListener(e1 -> {
             PlaceBUS pb1 = new PlaceBUS();
             arrCheckBox.clear();
@@ -658,7 +707,6 @@ public class TourContent extends JPanel{
                 pnlPlaceDetail.add(cb);
             }
             pnlPlaceDetail.updateUI();
-
             TourBUS tb = new TourBUS();
             if (!txtIdTour.getText().equals("") && tb.checkExistById(Integer.parseInt(txtIdTour.getText()))) {
                 ArrayList<PlaceDTO> placess = tb.getPlacesOfTour(Integer.parseInt(txtIdTour.getText()));
@@ -689,6 +737,10 @@ public class TourContent extends JPanel{
                         txtNameTour.setText(tourdto.getTour_name());
                         cbxDepTour.setSelectedItem(tourdto.getDeparture_place());
                         cbxDesTour.setSelectedItem(tourdto.getRegion_code());
+                        VehicleBUS jjjjwrt = new VehicleBUS();
+                        VehicleDTO vhhh = jjjjwrt.getById(tourdto.getVehicle_id());
+//                        System.out.println(vhhh.toString());
+                        cbxVehicle.setSelectedItem(vhhh.getVehicle_id() + "-" + vhhh.getTenxe()+"-"+vhhh.getSuachua());
                         HotelBUS hb = new HotelBUS();
                         HotelDTO hd = hb.getById(tourdto.getHotel_id() );
                         cbxHotel.setSelectedItem(hd.getHotel_id() + "-" + hd.getHotel_name());
@@ -761,17 +813,17 @@ public class TourContent extends JPanel{
         // load form of Tour
         txtIdTour.setText(tourListTable.getValueAt(row,0).toString());
         txtNameTour.setText(tourListTable.getValueAt(row,1).toString());
-        cbxDepTour.setSelectedItem(tourListTable.getValueAt(row,7));
-        cbxDesTour.setSelectedItem(tourListTable.getValueAt(row,3));
+        cbxDepTour.setSelectedItem(tourListTable.getValueAt(row,8));
+        cbxDesTour.setSelectedItem(tourListTable.getValueAt(row,4));
         HotelBUS hb = new HotelBUS();
         HotelDTO hd = hb.getById(Integer.parseInt(tourListTable.getValueAt(row,2).toString()) );
         cbxHotel.setSelectedItem(hd.getHotel_id() + "-" + hd.getHotel_name());
-        String date = tourListTable.getValueAt(row,5).toString();
+        String date = tourListTable.getValueAt(row,6).toString();
         StartDay.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-        date = tourListTable.getValueAt(row,6).toString();
+        date = tourListTable.getValueAt(row,7).toString();
         EndDay.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-        txtSchedule.setText(tourListTable.getValueAt(row,8).toString());
-        txtPriceTour.setText(tourListTable.getValueAt(row,4).toString());
+        txtSchedule.setText(tourListTable.getValueAt(row,9).toString());
+        txtPriceTour.setText(tourListTable.getValueAt(row,5).toString());
 
         TourBUS tb = new TourBUS();
         ArrayList<PlaceDTO> places = tb.getPlacesOfTour(Integer.parseInt(tourListTable.getValueAt(row,0).toString()) );
@@ -809,11 +861,11 @@ public class TourContent extends JPanel{
                 dep = Objects.requireNonNull(cbxDepTour.getSelectedItem()).toString(),
                 region = Objects.requireNonNull(cbxDesTour.getSelectedItem()).toString(),
                 hotel = Objects.requireNonNull(cbxHotel.getSelectedItem()).toString(),
+                Vehicle = Objects.requireNonNull(cbxVehicle.getSelectedItem()).toString(),
                 startday = sdf.format(StartDay.getDate()),
                 endday = sdf.format(EndDay.getDate()),
                 desc =  txtSchedule.getText(),
                 price = txtPriceTour.getText();
-
 
         TourDTO td = new TourDTO();
         td.setTour_id(Integer.parseInt(id));
@@ -821,6 +873,7 @@ public class TourContent extends JPanel{
         td.setDeparture_place(dep);
         td.setRegion_code(region);
         td.setHotel_id(Integer.parseInt(hotel.split("-")[0]));
+        td.setVehicle_id(Integer.parseInt(Vehicle.split("-")[0]));
         td.setSchedule_describe(desc);
         td.setPrice(Double.parseDouble(price));
         td.setStart_day(startday);
@@ -840,6 +893,7 @@ public class TourContent extends JPanel{
         }
         TourBUS tb = new TourBUS();
         JOptionPane.showMessageDialog(null,tb.add(td,tour_details));
+        loadTourData();
     }
 
     private void btnUpdateTourActionPerformed(ActionEvent e) {
@@ -859,6 +913,7 @@ public class TourContent extends JPanel{
                 dep = Objects.requireNonNull(cbxDepTour.getSelectedItem()).toString(),
                 region = Objects.requireNonNull(cbxDesTour.getSelectedItem()).toString(),
                 hotel = Objects.requireNonNull(cbxHotel.getSelectedItem()).toString(),
+                		Vehicle = Objects.requireNonNull(cbxHotel.getSelectedItem()).toString(),
                 startday = sdf.format(StartDay.getDate()),
                 endday = sdf.format(EndDay.getDate()),
                 desc =  txtSchedule.getText(),
@@ -871,6 +926,7 @@ public class TourContent extends JPanel{
         td.setDeparture_place(dep);
         td.setRegion_code(region);
         td.setHotel_id(Integer.parseInt(hotel.split("-")[0]));
+        td.setVehicle_id(Integer.parseInt(Vehicle.split("-")[0]));
         td.setSchedule_describe(desc);
         td.setPrice(Double.parseDouble(price));
         td.setStart_day(startday);
@@ -890,6 +946,7 @@ public class TourContent extends JPanel{
         }
         TourBUS tb = new TourBUS();
         JOptionPane.showMessageDialog(null,tb.update(td,tour_details));
+        loadTourData();
     }
 
     private void btnDeleteTourActionPerformed(ActionEvent e) {
@@ -902,6 +959,7 @@ public class TourContent extends JPanel{
 
         TourBUS tb = new TourBUS();
         JOptionPane.showMessageDialog(null,tb.delete(Integer.parseInt(id)));
+        loadTourData();
     }
 
     private void btnRefreshTourActionPerformed(ActionEvent e) {
