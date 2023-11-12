@@ -548,12 +548,14 @@ public class TourContent extends JPanel{
         ArrayList<TourDTO> tours = tb.getAll();
         String new_id = String.valueOf(tours.get(tours.size()-1).getTour_id()+1);
         txtIdTour.setText(new_id);
+        HotelBUS hotelbs = new HotelBUS();
+        VehicleBUS vehiclebs = new VehicleBUS();
         for (TourDTO tour : tours) {
             model_tour.addRow(new Object[]{
                     tour.getTour_id(),
                     tour.getTour_name(),
-                    tour.getHotel_id(),
-                    tour.getVehicle_id(),
+                    tour.getHotel_id() + "-" + hotelbs.getById(tour.getHotel_id()).getHotel_name(),
+                    tour.getVehicle_id() + "-" + vehiclebs.getById(tour.getVehicle_id()).getTenxe() + "-" + vehiclebs.getById(tour.getVehicle_id()).getSuachua(),
                     tour.getRegion_code(),
                     tour.getPrice(),
                     tour.getStart_day(),
@@ -816,8 +818,9 @@ public class TourContent extends JPanel{
         cbxDepTour.setSelectedItem(tourListTable.getValueAt(row,8));
         cbxDesTour.setSelectedItem(tourListTable.getValueAt(row,4));
         HotelBUS hb = new HotelBUS();
-        HotelDTO hd = hb.getById(Integer.parseInt(tourListTable.getValueAt(row,2).toString()) );
+        HotelDTO hd = hb.getById(Integer.parseInt(tourListTable.getValueAt(row,2).toString().split("-")[0]) );
         cbxHotel.setSelectedItem(hd.getHotel_id() + "-" + hd.getHotel_name());
+        cbxVehicle.setSelectedItem(tourListTable.getValueAt(row,3).toString());
         String date = tourListTable.getValueAt(row,6).toString();
         StartDay.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
         date = tourListTable.getValueAt(row,7).toString();

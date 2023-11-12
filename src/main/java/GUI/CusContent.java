@@ -402,6 +402,11 @@ public class CusContent extends JPanel{
         btnAddCus = new JButton("Add");
         btnAddCus.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if(txtIdCus.getText() == "" || txtNameCus.getText() == "" || txtEmailCus.getText() == "" || txtPhoneCus.getText() == "" ) {
+            		JOptionPane.showMessageDialog(null, "dữ liệu không được để trống !");
+            		return;
+            	}
+            		
                 String idString = txtIdCus.getText();
                 CustomerBUS customerBUS = new CustomerBUS();
                 int idcs = 0 ;
@@ -497,6 +502,10 @@ public class CusContent extends JPanel{
         btnAddCus = new JButton("Update");
         btnAddCus.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if(txtIdCus.getText() == "" || txtNameCus.getText() == "" || OldCus.getDate() == null || txtEmailCus.getText() == "" || txtPhoneCus.getText() == "") {
+            		JOptionPane.showMessageDialog(null, "dữ liệu không được để trống !");
+            		return;
+            	}
                 String idString = txtIdCus.getText();
                 int idcs = 0 ;
                 if(isNumeric(idString)==true) {

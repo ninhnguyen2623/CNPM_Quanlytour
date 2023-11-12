@@ -103,13 +103,7 @@ public class BillContent extends JPanel {
     }
 
     private void setUpTable() {
-        model_bill = new DefaultTableModel();
-        model_bill.addColumn("Id");
-        model_bill.addColumn("Tour_id");
-        model_bill.addColumn("Customer_id");
-        model_bill.addColumn("Customer_number");
-        model_bill.addColumn("Total_cost");
-        model_bill.addColumn("Create_at");
+        
 
 
         model_ser = new DefaultTableModel();
@@ -412,16 +406,26 @@ public class BillContent extends JPanel {
     }
 
     private void loadBillData() {
+    	model_bill = new DefaultTableModel();
+        model_bill.addColumn("Id");
+        model_bill.addColumn("Tour_id");
+        model_bill.addColumn("Customer_id");
+        model_bill.addColumn("Customer_number");
+        model_bill.addColumn("Total_cost");
+        model_bill.addColumn("Create_at");
         // load bill table
         BookingBUS bb = new BookingBUS();
         ArrayList<BookingDTO> bookings = bb.getAll();
         String new_id = String.valueOf(bookings.get(bookings.size()-1).getBooking_id()+1);
         txtIdBill.setText(new_id);
+        
+        TourBUS hdhdhd = new TourBUS();
+        CustomerBUS fdfeee = new CustomerBUS();
         for (BookingDTO booking : bookings) {
             model_bill.addRow(new Object[]{
                     booking.getBooking_id(),
-                    booking.getTour_id(),
-                    booking.getCustomer_id(),
+                    booking.getTour_id() + "-" + hdhdhd.getById(booking.getTour_id()).getTour_name(),
+                    booking.getCustomer_id() + "-" + fdfeee.getById(booking.getCustomer_id()).getCustomer_name(),
                     booking.getCustomer_number(),
                     booking.getTotal_cost(),
                     booking.getCreate_at()
@@ -472,12 +476,13 @@ public class BillContent extends JPanel {
                 txtIdBill.setText(billListTable.getValueAt(row,0).toString());
                 TourBUS tb = new TourBUS();
                 TourDTO td = new TourDTO();
-                td = tb.getById( Integer.parseInt( billListTable.getValueAt(row,1).toString()));
+//                setCustomer_id(Integer.parseInt(cus_name.split("-")[0]));
+                td = tb.getById( Integer.parseInt( billListTable.getValueAt(row,1).toString().split("-")[0]));
                 cbxTourNameOfBill.setSelectedItem(td.getTour_id()+"-"+td.getTour_name()+"-"+td.getPrice());
 
                 CustomerBUS cbs = new CustomerBUS();
                 CustomerDTO cdo = new CustomerDTO();
-                cdo = cbs.getById(Integer.parseInt(billListTable.getValueAt(row,2).toString()));
+                cdo = cbs.getById(Integer.parseInt(billListTable.getValueAt(row,2).toString().split("-")[0]));
                 cbxCusNameOfBill.setSelectedItem(cdo.getCustomer_id()+"-"+cdo.getCustomer_name());
                 txtNumOfCus.setText(billListTable.getValueAt(row,3).toString());
                 txtTotalPrice.setText(billListTable.getValueAt(row,4).toString());
@@ -511,6 +516,7 @@ public class BillContent extends JPanel {
                     System.out.println(cbx.isSelected());
                 }
                 txtSerBill.setText(String.join(",",arrServices));
+                loadBillData();
             }
         });
 
@@ -555,7 +561,7 @@ public class BillContent extends JPanel {
                     cus_name = Objects.requireNonNull(cbxCusNameOfBill.getSelectedItem()).toString(),
                     cus_num = txtNumOfCus.getText(),
                     total_price = txtTotalPrice.getText();
-
+            
             BookingDTO bdo = new BookingDTO();
             bdo.setBooking_id(Integer.parseInt(id));
             bdo.setTour_id(Integer.parseInt(tour_name.split("-")[0]));
@@ -577,6 +583,7 @@ public class BillContent extends JPanel {
 
             BookingBUS bbs = new BookingBUS();
             JOptionPane.showMessageDialog(null,bbs.add(bdo,booking_details));
+            loadBillData();
         });
 
         btnUpdateBill.addActionListener(e -> {
@@ -613,6 +620,7 @@ public class BillContent extends JPanel {
 
             BookingBUS bbs = new BookingBUS();
             JOptionPane.showMessageDialog(null,bbs.update(bdo,booking_details));
+            loadBillData();
         });
 
         btnDeleteBill.addActionListener(e -> {
@@ -634,6 +642,7 @@ public class BillContent extends JPanel {
             loadBillData();
             txtNumOfCus.setText("");
            txtTotalPrice.setText("");
+           loadBillData();
 
         });
 
