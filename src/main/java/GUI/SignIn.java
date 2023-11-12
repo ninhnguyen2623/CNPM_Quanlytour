@@ -344,6 +344,7 @@ public class SignIn extends JFrame {
 				mag.getPnlListDetail().remove(mag.getPnlSerManager());
 				mag.getPnlListDetail().remove(mag.getPnlBillManager());
 				mag.getPnlListDetail().remove(mag.getPnlCusManager());
+				mag.getPnlListDetail().remove(mag.getPnlVehicleManager());
 				mag.setVisible(true);
 			}
 			
