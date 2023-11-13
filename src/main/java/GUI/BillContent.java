@@ -94,7 +94,8 @@ public class BillContent extends JPanel {
     private ArrayList<JCheckBox> arrCheckBox = new ArrayList<>();
     private ArrayList<String> arrServices = new ArrayList<>();
     private JButton btnTotalPrice;
-
+    
+    private double sumsertour = 0;
     public BillContent() {
         setUpTable();
         init();
@@ -424,10 +425,10 @@ public class BillContent extends JPanel {
         for (BookingDTO booking : bookings) {
             model_bill.addRow(new Object[]{
                     booking.getBooking_id(),
-                    booking.getTour_id() + "-" + hdhdhd.getById(booking.getTour_id()).getTour_name(),
+                    booking.getTour_id() + "-" + hdhdhd.getById(booking.getTour_id()).getTour_name()+"-"+String.format("%,.2f", hdhdhd.getById(booking.getTour_id()).getPrice())+" đ",
                     booking.getCustomer_id() + "-" + fdfeee.getById(booking.getCustomer_id()).getCustomer_name(),
                     booking.getCustomer_number(),
-                    booking.getTotal_cost(),
+                    String.format("%,.2f", booking.getTotal_cost())+" đ",
                     booking.getCreate_at()
             });
         }
@@ -439,7 +440,7 @@ public class BillContent extends JPanel {
         ArrayList<TourDTO> tours = tb.getAll();
 
         for (TourDTO tour : tours) {
-            model_tour.addElement(tour.getTour_id() + "-" + tour.getTour_name()+"-"+tour.getPrice()) ;
+            model_tour.addElement(tour.getTour_id() + "-" + tour.getTour_name()+"-"+String.format("%,.2f", tour.getPrice())+" đ") ;
         }
         cbxTourNameOfBill.setModel(model_tour);
 
@@ -461,7 +462,7 @@ public class BillContent extends JPanel {
         ServiceBUS sbs = new ServiceBUS();
         ArrayList<ServiceDTO> services = sbs.getAll();
         for (ServiceDTO service : services) {
-            JCheckBox cbx = new JCheckBox(service.getService_id() +"-" + service.getService_name()+"-"+service.getService_price());
+            JCheckBox cbx = new JCheckBox(service.getService_id() +"-" + service.getService_name()+"-"+String.format("%,.2f", service.getService_price())+" đ");
             arrCheckBox.add(cbx);
             pnlSerDetail.add(cbx);
         }
@@ -478,7 +479,7 @@ public class BillContent extends JPanel {
                 TourDTO td = new TourDTO();
 //                setCustomer_id(Integer.parseInt(cus_name.split("-")[0]));
                 td = tb.getById( Integer.parseInt( billListTable.getValueAt(row,1).toString().split("-")[0]));
-                cbxTourNameOfBill.setSelectedItem(td.getTour_id()+"-"+td.getTour_name()+"-"+td.getPrice());
+                cbxTourNameOfBill.setSelectedItem(td.getTour_id()+"-"+td.getTour_name()+"-"+String.format("%,.2f", td.getPrice())+" đ");
 
                 CustomerBUS cbs = new CustomerBUS();
                 CustomerDTO cdo = new CustomerDTO();
@@ -652,7 +653,10 @@ public class BillContent extends JPanel {
                 return;
             }
             double total=0;
-            double tour_name = Double.parseDouble(Objects.requireNonNull(cbxTourNameOfBill.getSelectedItem()).toString().split("-")[2]);
+            int tourid = Integer.parseInt(Objects.requireNonNull(cbxTourNameOfBill.getSelectedItem()).toString().split("-")[0]);
+            TourBUS tourbs = new TourBUS();
+            double price_tour = tourbs.getById(tourid).getPrice();
+//            double tour_name = Double.parseDouble(Objects.requireNonNull(cbxTourNameOfBill.getSelectedItem()).toString().split("-")[2]);
             double cus_num = Double.parseDouble(txtNumOfCus.getText());
             if (cus_num < 1 ){
                 JOptionPane.showMessageDialog(null,"Số lượng khách hàng không được bé hơn 1!!");
@@ -667,7 +671,8 @@ public class BillContent extends JPanel {
             for (String ser : arrServices) {
                 total += sbs.getById(Integer.parseInt(ser)).getService_price();
             }
-            total += tour_name*cus_num;
+            total += price_tour*cus_num;
+            sumsertour = total;
             txtTotalPrice.setText(String.valueOf(total));
         });
 
@@ -696,7 +701,7 @@ public class BillContent extends JPanel {
 
                         for (JCheckBox cbx : arrCheckBox) {
                             for (ServiceDTO service : services)
-                                if (Objects.equals(cbx.getText(),service.getService_id()+"-"+service.getService_name()+"-"+service.getService_price())){
+                                if (Objects.equals(cbx.getText(),service.getService_id()+"-"+service.getService_name()+"-"+String.format("%,.2f", service.getService_price())+" đ")){
                                     cbx.setSelected(true);
                                     arrServices.add(cbx.getText().split("-")[0]);
                                     break;

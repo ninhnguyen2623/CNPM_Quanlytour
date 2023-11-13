@@ -32,6 +32,8 @@ import javax.swing.border.EtchedBorder;
 import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -104,6 +106,10 @@ public class StatisticsContent extends JPanel {
 	private JPanel panel_1;
 	private JPanel panel_2;
 	private JPanel panel_7;
+	private JPanel panel_8;
+	private JLabel lblsumprice;
+	private JTextField txtprice;
+	private JPanel pnlsumprice;
 	private JLabel lblNewLabel;
 	private JPanel pnlTitle;
 	private JPanel pnlBtnStatictical;
@@ -183,7 +189,7 @@ public class StatisticsContent extends JPanel {
 		
 		
 		pnlStatisticsBy = new JPanel();
-		pnlStatisticsBy.setPreferredSize(new Dimension(20, 135));
+		pnlStatisticsBy.setPreferredSize(new Dimension(50, 150));
 		pnlBookingStatistical.add(pnlStatisticsBy, BorderLayout.NORTH);
 		pnlStatisticsBy.setLayout(new BorderLayout(0, 0));
 		
@@ -238,6 +244,9 @@ public class StatisticsContent extends JPanel {
 		pnlStatisticsBy.add(panel_6, BorderLayout.SOUTH);
 		panel_6.setLayout(new BoxLayout(panel_6, BoxLayout.X_AXIS));
 		
+		
+		
+		
 		btnShowChart_Booking = new JButton("Chart Booking");
 		btnShowChart_Booking.addActionListener(new ActionListener() {
 			private String[] items16;
@@ -278,21 +287,28 @@ public class StatisticsContent extends JPanel {
 			    	ArrayList<BookingDTO> data = BookingDAO.getInstance().getAll();
 		                TourBUS tourbs = new TourBUS();
 		                CustomerBUS cusbs = new CustomerBUS();
+		                	Double sumpce = .0;
 		                for(BookingDTO BookingDTO: data) {
 	                        Double stprice = BookingDTO.getTotal_cost();
 	                        if(stprice >= Double.parseDouble(startprice) && stprice <= Double.parseDouble(endprice) ) { 
+	                        	String formatpricce = String.format("%,.2f", BookingDTO.getTotal_cost());
 	                        	model.addRow(new Object[] {
-	                        			BookingDTO.getBooking_id(),BookingDTO.getTour_id() + "-" + tourbs.getById(BookingDTO.getTour_id()).getTour_name(),BookingDTO.getCustomer_id() + "-" + cusbs.getById(BookingDTO.getCustomer_id()).getCustomer_name(),BookingDTO.getCustomer_number(),BookingDTO.getTotal_cost(),BookingDTO.getCreate_at()
+	                        			BookingDTO.getBooking_id(),BookingDTO.getTour_id() + "-" + tourbs.getById(BookingDTO.getTour_id()).getTour_name(),BookingDTO.getCustomer_id() + "-" + cusbs.getById(BookingDTO.getCustomer_id()).getCustomer_name(),BookingDTO.getCustomer_number(),formatpricce+" đ",BookingDTO.getCreate_at()
 	                        	});
 	                        	checkkqBoolean = true;
+	                        	sumpce = sumpce + BookingDTO.getTotal_cost();
 	                        }
 		                }	
+//		                System.out.println(sumpce);
+		                txtprice.setText(String.format("%,.2f", sumpce)+" đ");
 		                if(checkkqBoolean == false) {
+		                	
 		                	 JOptionPane.showMessageDialog(null, "không có bill trong khoảng giá này !");
 			                    DefaultTableModel model2 = (DefaultTableModel) BookingTable.getModel();
 			                    while (model2.getRowCount() > 0) {
 			                        model2.removeRow(0);
 			                    }
+			                    txtprice.setText(" ");
 			                    return;
 		                }
 		    	}
@@ -307,11 +323,15 @@ public class StatisticsContent extends JPanel {
 		btnView_Booking.setFocusPainted(false);
 		panel_6.add(btnView_Booking);
 		
+		
+		
+		
 		btnView_date = new JButton("statistics date");
 		btnView_date.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Date startdt = OldBookingstart.getDate();
 				Date enddt = OldBookingend.getDate();
+				
 				 ArrayList<BookingDTO> data = BookingDAO.getInstance().getAll();
 	                
 	                DefaultTableModel model = new DefaultTableModel();
@@ -322,6 +342,7 @@ public class StatisticsContent extends JPanel {
 	                model.addColumn("Total Price");
 	                model.addColumn("Create_At");
 	                boolean checkdate = false;
+	                Double sumpce = .0;
 	            if(startdt == null || enddt == null) {
 	            	JOptionPane.showMessageDialog(null, "ngày không được để trống !");
 					return;
@@ -337,13 +358,15 @@ public class StatisticsContent extends JPanel {
 	                        String date2 = BookingDTO.getCreate_at();
 	                        SimpleDateFormat formatter4 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	                        Date date4;
+	                        String formatpricce = String.format("%,.2f", BookingDTO.getTotal_cost());
 							try {
 								date4 = formatter4.parse(date2);
 								if(date4.after(startdt) && date4.before(enddt)) { 
 		                        	model.addRow(new Object[] {
-		                        			BookingDTO.getBooking_id(),BookingDTO.getTour_id() + "-" + tourbs.getById(BookingDTO.getTour_id()).getTour_name(),BookingDTO.getCustomer_id() + "-" + cusbs.getById(BookingDTO.getCustomer_id()).getCustomer_name(),BookingDTO.getCustomer_number(),BookingDTO.getTotal_cost(),BookingDTO.getCreate_at()
+		                        			BookingDTO.getBooking_id(),BookingDTO.getTour_id() + "-" + tourbs.getById(BookingDTO.getTour_id()).getTour_name(),BookingDTO.getCustomer_id() + "-" + cusbs.getById(BookingDTO.getCustomer_id()).getCustomer_name(),BookingDTO.getCustomer_number(),formatpricce+" đ",BookingDTO.getCreate_at()
 		                        	});
 		                        	checkdate = true;
+		                        	sumpce = sumpce + BookingDTO.getTotal_cost();
 		                        }
 								
 							} catch (java.text.ParseException e1) {
@@ -351,12 +374,14 @@ public class StatisticsContent extends JPanel {
 								e1.printStackTrace();
 							}	                        
 	                }
+					 txtprice.setText(String.format("%,.2f", sumpce)+" đ");
 					 if(checkdate == false) {
 	                	 JOptionPane.showMessageDialog(null, "không có bill trong khoảng ngày này !");
 		                    DefaultTableModel model2 = (DefaultTableModel) BookingTable.getModel();
 		                    while (model2.getRowCount() > 0) {
 		                        model2.removeRow(0);
 		                    }
+		                    txtprice.setText(" ");
 		                    return;
 	                }
 				}
@@ -387,7 +412,7 @@ public class StatisticsContent extends JPanel {
 		    	model.addColumn("Customer Number");
 		    	model.addColumn("Total Price");
 		    	model.addColumn("Create_At");
-		    	
+		    	 Double sumpce = .0;
 		    	if(Double.parseDouble(startprice) > Double.parseDouble(endprice) && startdt.after(enddt) && startdt == null || enddt == null) {
 		    		 JOptionPane.showMessageDialog(null, "giá bắt đầu phải nhỏ hơn giá kết thúc và ngày bắt đầu phải lớn hơn ngày kết thúc và ngày không được để trống !");
 		    		 return;
@@ -403,14 +428,16 @@ public class StatisticsContent extends JPanel {
 	                        SimpleDateFormat formatter4 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	                        Date date4;
 	                        Double stprice = BookingDTO.getTotal_cost();
+	                        String formatpricce = String.format("%,.2f", BookingDTO.getTotal_cost());
 	                        try {
 								date4 = formatter4.parse(date2);
 								if(stprice >= Double.parseDouble(startprice) && stprice <= Double.parseDouble(endprice) && date4.after(startdt)  && date4.before(enddt)) { 
 		                        	model.addRow(new Object[] {
-		                        			BookingDTO.getBooking_id(),BookingDTO.getTour_id() + "-" + tourbs.getById(BookingDTO.getTour_id()).getTour_name(),BookingDTO.getCustomer_id() + "-" + cusbs.getById(BookingDTO.getCustomer_id()).getCustomer_name(),BookingDTO.getCustomer_number(),BookingDTO.getTotal_cost(),BookingDTO.getCreate_at()
+		                        			BookingDTO.getBooking_id(),BookingDTO.getTour_id() + "-" + tourbs.getById(BookingDTO.getTour_id()).getTour_name(),BookingDTO.getCustomer_id() + "-" + cusbs.getById(BookingDTO.getCustomer_id()).getCustomer_name(),BookingDTO.getCustomer_number(),formatpricce +" đ",BookingDTO.getCreate_at()
 		                        	});
 		                        	checkdate = true;
 		                        	checkkqBoolean = true;
+		                        	sumpce = sumpce + BookingDTO.getTotal_cost();
 		                        }
 								
 							} catch (java.text.ParseException e1) {
@@ -419,12 +446,14 @@ public class StatisticsContent extends JPanel {
 							}	 
 	                        
 		                }	
+		                txtprice.setText(String.format("%,.2f", sumpce)+" đ");
 		                if(checkkqBoolean == false && checkdate == false) {
 		                	 JOptionPane.showMessageDialog(null, "không có bill trong khoảng giá và ngày này !");
 			                    DefaultTableModel model2 = (DefaultTableModel) BookingTable.getModel();
 			                    while (model2.getRowCount() > 0) {
 			                        model2.removeRow(0);
 			                    }
+			                    txtprice.setText(" ");
 			                    return;
 		                }
 		    	}
@@ -440,6 +469,9 @@ public class StatisticsContent extends JPanel {
 		btnView_price_date.setContentAreaFilled(false);
 		panel_6.add(btnView_price_date);
 		
+
+		
+		
 		pnlDetailBookingList = new JPanel();
 		pnlDetailBookingList.setLayout(new CardLayout(0, 0));
 		pnlDetailBookingList.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Detail List", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -447,6 +479,19 @@ public class StatisticsContent extends JPanel {
 		
 		scrollPane_1 = new JScrollPane();
 		pnlDetailBookingList.add(scrollPane_1, BorderLayout.CENTER);
+		
+		panel_8 = new JPanel();
+		panel_8.setPreferredSize(new Dimension(10, 40));
+		pnlBookingStatistical.add(panel_8,BorderLayout.SOUTH);
+//		panel_8.setLayout(new BoxLayout(panel_8, BoxLayout.));
+		
+		lblsumprice = new JLabel("Sum price is:            ");
+		panel_8.add(lblsumprice);
+		
+		 txtprice = new JTextField();
+		 txtprice.setPreferredSize(new Dimension(100, 25));
+		 panel_8.add(txtprice);
+		 txtprice.setColumns(20);
 		
 		
 		cardLayoutPnlContent =  (CardLayout)(this.getPnlStatisticContent().getLayout());
