@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.text.Normalizer;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BillContent extends JPanel {
@@ -312,6 +315,10 @@ public class BillContent extends JPanel {
         txtTotalPrice.setPreferredSize(new Dimension(150, 25));
         txtTotalPrice.setEditable(false);
         pnlTotalPrice.add(txtTotalPrice);
+        
+        JLabel donvi =  new JLabel("đ    ");
+        pnlTotalPrice.add(donvi);
+
 
         btnTotalPrice = new JButton("Count");
         btnTotalPrice.setSize(50,50);
@@ -425,7 +432,7 @@ public class BillContent extends JPanel {
         for (BookingDTO booking : bookings) {
             model_bill.addRow(new Object[]{
                     booking.getBooking_id(),
-                    booking.getTour_id() + "-" + hdhdhd.getById(booking.getTour_id()).getTour_name()+"-"+String.format("%,.2f", hdhdhd.getById(booking.getTour_id()).getPrice())+" đ",
+                    booking.getTour_id() + "-" + hdhdhd.getById(booking.getTour_id()).getTour_name() + "-" + String.format("%,.2f", hdhdhd.getById(booking.getTour_id()).getPrice()) + " đ",
                     booking.getCustomer_id() + "-" + fdfeee.getById(booking.getCustomer_id()).getCustomer_name(),
                     booking.getCustomer_number(),
                     String.format("%,.2f", booking.getTotal_cost())+" đ",
@@ -440,7 +447,7 @@ public class BillContent extends JPanel {
         ArrayList<TourDTO> tours = tb.getAll();
 
         for (TourDTO tour : tours) {
-            model_tour.addElement(tour.getTour_id() + "-" + tour.getTour_name()+"-"+String.format("%,.2f", tour.getPrice())+" đ") ;
+            model_tour.addElement(tour.getTour_id() + "-" + tour.getTour_name() + "-" + String.format("%,.2f", tour.getPrice()) + " đ") ;
         }
         cbxTourNameOfBill.setModel(model_tour);
 
@@ -462,7 +469,7 @@ public class BillContent extends JPanel {
         ServiceBUS sbs = new ServiceBUS();
         ArrayList<ServiceDTO> services = sbs.getAll();
         for (ServiceDTO service : services) {
-            JCheckBox cbx = new JCheckBox(service.getService_id() +"-" + service.getService_name()+"-"+String.format("%,.2f", service.getService_price())+" đ");
+            JCheckBox cbx = new JCheckBox(service.getService_id() + "-" + service.getService_name()+"-"+String.format("%,.2f", service.getService_price())+" đ");
             arrCheckBox.add(cbx);
             pnlSerDetail.add(cbx);
         }
@@ -472,24 +479,18 @@ public class BillContent extends JPanel {
         billListTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int row = billListTable.getSelectedRow();
+            	 TableModel model = billListTable.getModel();
+                int i = billListTable.getSelectedRow();
                 // load form bill
-                txtIdBill.setText(billListTable.getValueAt(row,0).toString());
-                TourBUS tb = new TourBUS();
-                TourDTO td = new TourDTO();
-//                setCustomer_id(Integer.parseInt(cus_name.split("-")[0]));
-                td = tb.getById( Integer.parseInt( billListTable.getValueAt(row,1).toString().split("-")[0]));
-                cbxTourNameOfBill.setSelectedItem(td.getTour_id()+"-"+td.getTour_name()+"-"+String.format("%,.2f", td.getPrice())+" đ");
-
-                CustomerBUS cbs = new CustomerBUS();
-                CustomerDTO cdo = new CustomerDTO();
-                cdo = cbs.getById(Integer.parseInt(billListTable.getValueAt(row,2).toString().split("-")[0]));
-                cbxCusNameOfBill.setSelectedItem(cdo.getCustomer_id()+"-"+cdo.getCustomer_name());
-                txtNumOfCus.setText(billListTable.getValueAt(row,3).toString());
-                txtTotalPrice.setText(billListTable.getValueAt(row,4).toString());
-                // load service table
+                txtIdBill.setText(model.getValueAt(i,0).toString());
+                cbxTourNameOfBill.setSelectedItem(model.getValueAt(i,1).toString());
+                cbxCusNameOfBill.setSelectedItem(model.getValueAt(i,2).toString());
+                txtNumOfCus.setText(model.getValueAt(i,3).toString());
                 BookingBUS bb =new BookingBUS();
-                ArrayList<ServiceDTO> services = bb.getServicesOfBooking(Integer.parseInt(billListTable.getValueAt(row,0).toString()));
+                BookingDTO jdjwer = bb.getById(Integer.parseInt(model.getValueAt(i,0).toString()));
+                txtTotalPrice.setText(String.format("%,.2f", jdjwer.getTotal_cost()));
+                // load service table
+                ArrayList<ServiceDTO> services = bb.getServicesOfBooking(Integer.parseInt(model.getValueAt(i,0).toString()));
                 while (model_ser.getRowCount() >= 1){
                     model_ser.removeRow(0);
                 }
@@ -497,7 +498,7 @@ public class BillContent extends JPanel {
                     model_ser.addRow(new Object[]{
                             serive.getService_id(),
                             serive.getService_name(),
-                            serive.getService_price()
+                            String.format("%,.2f", serive.getService_price())+" đ"
                     });
                 }
                 ser1ListTable.setModel(model_ser);
@@ -509,7 +510,7 @@ public class BillContent extends JPanel {
 
                 for (JCheckBox cbx : arrCheckBox) {
                     for (ServiceDTO service : services)
-                        if (Objects.equals(cbx.getText(),service.getService_id()+"-"+service.getService_name()+"-"+service.getService_price())){
+                        if (Objects.equals(cbx.getText(),service.getService_id() + "-" + service.getService_name()+"-"+String.format("%,.2f", service.getService_price())+" đ")){
                             cbx.setSelected(true);
                             arrServices.add(cbx.getText().split("-")[0]);
                             break;
@@ -517,7 +518,7 @@ public class BillContent extends JPanel {
                     System.out.println(cbx.isSelected());
                 }
                 txtSerBill.setText(String.join(",",arrServices));
-                loadBillData();
+//                loadBillData();
             }
         });
 
@@ -562,13 +563,15 @@ public class BillContent extends JPanel {
                     cus_name = Objects.requireNonNull(cbxCusNameOfBill.getSelectedItem()).toString(),
                     cus_num = txtNumOfCus.getText(),
                     total_price = txtTotalPrice.getText();
-            
+//            System.out.println(txtTotalPrice.getText());
+            String formattedNumber1 = total_price.replaceAll("[^0-9,]", "").replaceAll("\\.", "").replace(",", ".");
+//            System.out.println(Double.parseDouble(formattedNumber1));
             BookingDTO bdo = new BookingDTO();
             bdo.setBooking_id(Integer.parseInt(id));
             bdo.setTour_id(Integer.parseInt(tour_name.split("-")[0]));
             bdo.setCustomer_id(Integer.parseInt(cus_name.split("-")[0]));
             bdo.setCustomer_number(Integer.parseInt(cus_num));
-            bdo.setTotal_cost(Double.parseDouble(total_price));
+            bdo.setTotal_cost(Double.parseDouble(formattedNumber1));
             ArrayList<Booking_DetailDTO> booking_details = new ArrayList<>();
             for (String ap : arrServices) {
                 Booking_DetailDTO booking_detail = new Booking_DetailDTO();
@@ -599,13 +602,14 @@ public class BillContent extends JPanel {
                     cus_name = Objects.requireNonNull(cbxCusNameOfBill.getSelectedItem()).toString(),
                     cus_num = txtNumOfCus.getText(),
                     total_price = txtTotalPrice.getText();
+            String formattedNumber1 = total_price.replaceAll("[^0-9,]", "").replaceAll("\\.", "").replace(",", ".");
 
             BookingDTO bdo = new BookingDTO();
             bdo.setBooking_id(Integer.parseInt(id));
             bdo.setTour_id(Integer.parseInt(tour_name.split("-")[0]));
             bdo.setCustomer_id(Integer.parseInt(cus_name.split("-")[0]));
             bdo.setCustomer_number(Integer.parseInt(cus_num));
-            bdo.setTotal_cost(Double.parseDouble(total_price));
+            bdo.setTotal_cost(Double.parseDouble(formattedNumber1));
             ArrayList<Booking_DetailDTO> booking_details = new ArrayList<>();
             for (String ap : arrServices) {
                 Booking_DetailDTO booking_detail = new Booking_DetailDTO();
@@ -673,7 +677,7 @@ public class BillContent extends JPanel {
             }
             total += price_tour*cus_num;
             sumsertour = total;
-            txtTotalPrice.setText(String.valueOf(total));
+            txtTotalPrice.setText(String.format("%,.2f", total));
         });
 
         lblSearchBill.addMouseListener(new MouseAdapter() {
@@ -690,7 +694,7 @@ public class BillContent extends JPanel {
                         txtIdBill.setText( String.valueOf(bookingdto.getBooking_id()));
                         TourBUS tbs = new TourBUS();
                         TourDTO tdo = tbs.getById(bookingdto.getTour_id());
-                        cbxTourNameOfBill.setSelectedItem(tdo.getTour_id()+"-"+tdo.getTour_name()+"-"+tdo.getPrice());
+                        cbxTourNameOfBill.setSelectedItem(tdo.getTour_id() + "-" +tdo.getTour_name() + "-" + String.format("%,.2f", tdo.getPrice()) + " đ");
 
                         // ----------------------------- load service checkbox
                         BookingBUS bb = new BookingBUS();
@@ -716,7 +720,7 @@ public class BillContent extends JPanel {
                         CustomerDTO cdo = cusbs.getById(bookingdto.getCustomer_id());
                         cbxCusNameOfBill.setSelectedItem(cdo.getCustomer_id()+"-"+cdo.getCustomer_name());
 
-                        txtTotalPrice.setText(String.valueOf(bookingdto.getTotal_cost()));
+                        txtTotalPrice.setText(String.format("%,.2f", bookingdto.getTotal_cost()));
                     }
                     if(bookingdto ==null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin bill !");
@@ -733,5 +737,14 @@ public class BillContent extends JPanel {
             return false;
         }
         return pattern.matcher(strNum).matches();
+    }
+    public static boolean isValidFormat(String input) {
+        // Biểu thức chính quy kiểm tra định dạng của chuỗi
+        String regex = "\\d{1,3}(\\.\\d{3})*(,\\d{1,2})?$";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+
+        return matcher.matches();
     }
 }

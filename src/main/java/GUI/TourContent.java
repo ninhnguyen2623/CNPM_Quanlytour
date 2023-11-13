@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TourContent extends JPanel{
@@ -398,6 +399,9 @@ public class TourContent extends JPanel{
         txtPriceTour.setPreferredSize(new Dimension(100, 25));
         pnlPriceTour.add(txtPriceTour);
         txtPriceTour.setColumns(15);
+        
+        JLabel donvitinh = new JLabel("đ");
+        pnlPriceTour.add(donvitinh);
 
         pnlStartDay = new JPanel();
         pnlFillTour.add(pnlStartDay);
@@ -557,7 +561,7 @@ public class TourContent extends JPanel{
                     tour.getHotel_id() + "-" + hotelbs.getById(tour.getHotel_id()).getHotel_name(),
                     tour.getVehicle_id() + "-" + vehiclebs.getById(tour.getVehicle_id()).getTenxe() + "-" + vehiclebs.getById(tour.getVehicle_id()).getSuachua(),
                     tour.getRegion_code(),
-                    tour.getPrice(),
+                    String.format("%,.2f", tour.getPrice())+" đ",
                     tour.getStart_day(),
                     tour.getEnd_day(),
                     tour.getDeparture_place(),
@@ -759,7 +763,7 @@ public class TourContent extends JPanel{
                             throw new RuntimeException(e);
                         }
                         txtSchedule.setText(tourdto.getSchedule_describe());
-                        txtPriceTour.setText(String.valueOf(tourdto.getPrice()));
+                        txtPriceTour.setText(String.format("%,.2f", tourdto.getPrice()));
                     }
                     if(tourdto ==null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Tour !");
@@ -826,9 +830,10 @@ public class TourContent extends JPanel{
         date = tourListTable.getValueAt(row,7).toString();
         EndDay.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
         txtSchedule.setText(tourListTable.getValueAt(row,9).toString());
-        txtPriceTour.setText(tourListTable.getValueAt(row,5).toString());
-
         TourBUS tb = new TourBUS();
+        TourDTO kjkjkje = tb.getById(Integer.parseInt(tourListTable.getValueAt(row,0).toString()));
+        txtPriceTour.setText(String.format("%,.2f", kjkjkje.getPrice()));
+
         ArrayList<PlaceDTO> places = tb.getPlacesOfTour(Integer.parseInt(tourListTable.getValueAt(row,0).toString()) );
         while (model_place.getRowCount() >= 1){
             model_place.removeRow(0);
@@ -854,11 +859,14 @@ public class TourContent extends JPanel{
             return;
         }
 
-        if (txtIdTour.getText() == "" || txtNameTour.getText() == "" || txtSchedule.getText() == "" || txtPriceTour.getText() == "" || !isNumeric(txtIdTour.getText()) || !isNumeric(txtPriceTour.getText()) || arrPlaces.size() ==0) {
+        if (txtIdTour.getText() == "" || txtNameTour.getText() == "" || txtSchedule.getText() == "" || txtPriceTour.getText() == "" || !isNumeric(txtIdTour.getText()) || arrPlaces.size() ==0) {
             JOptionPane.showMessageDialog(null,"Dữ liệu không được để trống hoặc sai sót!!");
             return;
         }
-
+        if(!isValidFormat(txtPriceTour.getText()) ) {
+        	JOptionPane.showMessageDialog(null,"Dữ liệu Price không đúng vui lòng nhập lại theo định dạng : xxx.xxx.xxx,00");
+            return;
+        }
         String id = txtIdTour.getText(),
                 name = txtNameTour.getText(),
                 dep = Objects.requireNonNull(cbxDepTour.getSelectedItem()).toString(),
@@ -869,7 +877,7 @@ public class TourContent extends JPanel{
                 endday = sdf.format(EndDay.getDate()),
                 desc =  txtSchedule.getText(),
                 price = txtPriceTour.getText();
-
+        String formattedNumber1 = price.replaceAll("[^0-9,]", "").replaceAll("\\.", "").replace(",", ".");	
         TourDTO td = new TourDTO();
         td.setTour_id(Integer.parseInt(id));
         td.setTour_name(name);
@@ -878,7 +886,7 @@ public class TourContent extends JPanel{
         td.setHotel_id(Integer.parseInt(hotel.split("-")[0]));
         td.setVehicle_id(Integer.parseInt(Vehicle.split("-")[0]));
         td.setSchedule_describe(desc);
-        td.setPrice(Double.parseDouble(price));
+        td.setPrice(Double.parseDouble(formattedNumber1));
         td.setStart_day(startday);
         td.setEnd_day(endday);
 
@@ -906,7 +914,7 @@ public class TourContent extends JPanel{
             return;
         }
 
-        if ("".equals(txtIdTour.getText()) || "".equals(txtNameTour.getText()) || "".equals(txtSchedule.getText()) || "".equals(txtPriceTour.getText()) || !isNumeric(txtIdTour.getText()) || !isNumeric(txtPriceTour.getText()) || arrPlaces.isEmpty()) {
+        if ("".equals(txtIdTour.getText()) || "".equals(txtNameTour.getText()) || "".equals(txtSchedule.getText()) || "".equals(txtPriceTour.getText()) || !isNumeric(txtIdTour.getText()) || arrPlaces.isEmpty()) {
             JOptionPane.showMessageDialog(null,"Dữ liệu không được để trống hoặc sai sót!!");
             return;
         }
@@ -921,7 +929,8 @@ public class TourContent extends JPanel{
                 endday = sdf.format(EndDay.getDate()),
                 desc =  txtSchedule.getText(),
                 price = txtPriceTour.getText();
-
+        
+        String formattedNumber1 = price.replaceAll("[^0-9,]", "").replaceAll("\\.", "").replace(",", ".");	
         System.out.println(region);
         TourDTO td = new TourDTO();
         td.setTour_id(Integer.parseInt(id));
@@ -931,7 +940,7 @@ public class TourContent extends JPanel{
         td.setHotel_id(Integer.parseInt(hotel.split("-")[0]));
         td.setVehicle_id(Integer.parseInt(Vehicle.split("-")[0]));
         td.setSchedule_describe(desc);
-        td.setPrice(Double.parseDouble(price));
+        td.setPrice(Double.parseDouble(formattedNumber1));
         td.setStart_day(startday);
         td.setEnd_day(endday);
 
@@ -984,5 +993,14 @@ public class TourContent extends JPanel{
             return false;
         }
         return pattern.matcher(strNum).matches();
+    }
+    public static boolean isValidFormat(String input) {
+        // Biểu thức chính quy kiểm tra định dạng của chuỗi
+        String regex = "\\d{1,3}(\\.\\d{3})*(,\\d{1,2})?$";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+
+        return matcher.matches();
     }
 }
