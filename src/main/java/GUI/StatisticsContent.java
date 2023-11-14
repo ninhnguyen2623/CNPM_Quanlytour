@@ -219,7 +219,7 @@ public class StatisticsContent extends JPanel {
 		pnlStatisticsBy.add(panel_5, BorderLayout.CENTER);
 		panel_5.setLayout(new BoxLayout(panel_5, BoxLayout.X_AXIS));
 		
-		lblSelectMonth = new JLabel("Select Start         ");
+		lblSelectMonth = new JLabel("Select Day Start         ");
 		panel_5.add(lblSelectMonth);
 		
 		OldBookingstart = new JDateChooser();
@@ -227,7 +227,7 @@ public class StatisticsContent extends JPanel {
 		panel_5.add(OldBookingstart);
 		
 		
-		lblSelectYear = new JLabel("                    Select End            ");
+		lblSelectYear = new JLabel("                    Select Day End            ");
 		panel_5.add(lblSelectYear);
 		
 		OldBookingend = new JDateChooser();

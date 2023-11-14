@@ -144,23 +144,28 @@ public class CusContent extends JPanel{
                 if(isNumeric(shString)== true) {
                     int idcustomer = Integer.parseInt(shString.trim());
                     CustomerBUS customerBUS = new CustomerBUS();
-                    CustomerDTO customerDTO = customerBUS.getById(idcustomer);
-                    if(customerDTO != null) {
-                        String idcustomerString = String.valueOf(customerDTO.getCustomer_id());
-                        txtIdCus.setText(idcustomerString);
-                        txtNameCus.setText(customerDTO.getCustomer_name());
-                        String telcusString = String.valueOf(customerDTO.getTel());
-                        txtPhoneCus.setText(telcusString);
-                        txtEmailCus.setText(customerDTO.getEmail());
-                        try {
-                            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(customerDTO.getBirthday());
-                            OldCus.setDate(date1);
-                        } catch (ParseException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
+                    CustomerDTO itemCustomer = customerBUS.getById(idcustomer);
+                    if(itemCustomer != null) {
+                    	 DefaultTableModel model = new DefaultTableModel();
+                         model.addColumn("ID");;
+                         model.addColumn("Name");
+                         model.addColumn("Tel");
+                         model.addColumn("Birthday");
+                         model.addColumn("Email");
+                         model.addColumn("Create_At");
+                             model.addRow(new Object[] {
+                                     itemCustomer.getCustomer_id(),itemCustomer.getCustomer_name(),itemCustomer.getTel(),itemCustomer.getBirthday(),itemCustomer.getEmail(),itemCustomer.getCreate_at()
+                             });
+                         
+                         cusListTable = new JTable();
+                         cusListTable.setModel(model);
+                         sclListCus.setViewportView(cusListTable);
+                         panel_3 = new JPanel();
+                         panel_3.setPreferredSize(new Dimension(50, 10));
+                         pnlContentCusDetail.add(panel_3, BorderLayout.EAST);
+                         getDataFromJtableCustomer();
                     }
-                    if(customerDTO == null) {
+                    if(itemCustomer == null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Customer !");
                     }
                 }
@@ -168,27 +173,31 @@ public class CusContent extends JPanel{
                 	CustomerBUS customerBUS = new CustomerBUS();
                     ArrayList<CustomerDTO> arrhCustomerDTOs = customerBUS.getAll();
                     Boolean checkKQ = false;
-                    for(CustomerDTO itemCustomerDTO: arrhCustomerDTOs) {
-                        String temp = Normalizer.normalize(itemCustomerDTO.getCustomer_name(), Normalizer.Form.NFD);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("ID");;
+                    model.addColumn("Name");
+                    model.addColumn("Tel");
+                    model.addColumn("Birthday");
+                    model.addColumn("Email");
+                    model.addColumn("Create_At");
+                    for(CustomerDTO itemCustomer: arrhCustomerDTOs) {
+                        String temp = Normalizer.normalize(itemCustomer.getCustomer_name(), Normalizer.Form.NFD);
                         String temp2 = Normalizer.normalize(shString, Normalizer.Form.NFD);
                         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
                         if(pattern.matcher(temp).replaceAll("").equalsIgnoreCase(pattern.matcher(temp2).replaceAll(""))) {
-                            String idhotelString = String.valueOf(itemCustomerDTO.getCustomer_id());
-                            txtIdCus.setText(idhotelString);
-                            txtNameCus.setText(itemCustomerDTO.getCustomer_name());
-                            String telcusString = String.valueOf(itemCustomerDTO.getTel());
-                            txtPhoneCus.setText(telcusString);
-                            txtEmailCus.setText(itemCustomerDTO.getEmail());
-                            try {
-                                Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(itemCustomerDTO.getBirthday());
-                                OldCus.setDate(date1);
-                            } catch (ParseException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
+                        	model.addRow(new Object[] {
+                                    itemCustomer.getCustomer_id(),itemCustomer.getCustomer_name(),itemCustomer.getTel(),itemCustomer.getBirthday(),itemCustomer.getEmail(),itemCustomer.getCreate_at()
+                            });
                             checkKQ = true;
                         }
                     }
+                    cusListTable = new JTable();
+                    cusListTable.setModel(model);
+                    sclListCus.setViewportView(cusListTable);
+                    panel_3 = new JPanel();
+                    panel_3.setPreferredSize(new Dimension(50, 10));
+                    pnlContentCusDetail.add(panel_3, BorderLayout.EAST);
+                    getDataFromJtableCustomer();
                     if(checkKQ == false) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Customer !");
                     }
@@ -675,6 +684,7 @@ public class CusContent extends JPanel{
         }
         txtIdCus.setText(String.valueOf(i+1));
         txtSearchCus.setText("");
+        ClassLoaddataCustomer();
     }
     public boolean checkPhone(String str){
         String reg = "^(0|\\+84)(\\s|\\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\\d)(\\s|\\.)?(\\d{3})(\\s|\\.)?(\\d{3})$";

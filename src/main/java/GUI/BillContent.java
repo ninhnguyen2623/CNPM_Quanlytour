@@ -689,40 +689,36 @@ public class BillContent extends JPanel {
                 String shString = txtSearchBill.getText().trim();
                 BookingBUS bbs = new BookingBUS();
                 if(isNumeric(shString)) {
-                    BookingDTO bookingdto= bbs.getById(Integer.parseInt(shString.trim()));
-                    if(bookingdto != null) {
-                        txtIdBill.setText( String.valueOf(bookingdto.getBooking_id()));
-                        TourBUS tbs = new TourBUS();
-                        TourDTO tdo = tbs.getById(bookingdto.getTour_id());
-                        cbxTourNameOfBill.setSelectedItem(tdo.getTour_id() + "-" +tdo.getTour_name() + "-" + String.format("%,.2f", tdo.getPrice()) + " đ");
-
-                        // ----------------------------- load service checkbox
+                    BookingDTO booking = bbs.getById(Integer.parseInt(shString.trim()));
+                    if(booking != null) {
+                    	model_bill = new DefaultTableModel();
+                        model_bill.addColumn("Id");
+                        model_bill.addColumn("Tour_id");
+                        model_bill.addColumn("Customer_id");
+                        model_bill.addColumn("Customer_number");
+                        model_bill.addColumn("Total_cost");
+                        model_bill.addColumn("Create_at");
+                        // load bill table
                         BookingBUS bb = new BookingBUS();
-                        ArrayList<ServiceDTO> services = bb.getServicesOfBooking(bookingdto.getBooking_id());
-                        arrServices.clear();
-                        for (JCheckBox cbx : arrCheckBox)
-                            cbx.setSelected(false);
-
-                        for (JCheckBox cbx : arrCheckBox) {
-                            for (ServiceDTO service : services)
-                                if (Objects.equals(cbx.getText(),service.getService_id()+"-"+service.getService_name()+"-"+String.format("%,.2f", service.getService_price())+" đ")){
-                                    cbx.setSelected(true);
-                                    arrServices.add(cbx.getText().split("-")[0]);
-                                    break;
-                                }
-                            System.out.println(cbx.isSelected());
-                        }
-                        txtSerBill.setText(String.join(",",arrServices));
-
-                        // ----------------------------------------
-                        txtNumOfCus.setText(String.valueOf( bookingdto.getCustomer_number()));
-                        CustomerBUS cusbs = new CustomerBUS();
-                        CustomerDTO cdo = cusbs.getById(bookingdto.getCustomer_id());
-                        cbxCusNameOfBill.setSelectedItem(cdo.getCustomer_id()+"-"+cdo.getCustomer_name());
-
-                        txtTotalPrice.setText(String.format("%,.2f", bookingdto.getTotal_cost()));
+                        ArrayList<BookingDTO> bookings = bb.getAll();
+                        String new_id = String.valueOf(bookings.get(bookings.size()-1).getBooking_id()+1);
+                        txtIdBill.setText(new_id);
+                        
+                        TourBUS hdhdhd = new TourBUS();
+                        CustomerBUS fdfeee = new CustomerBUS();
+                      
+                            model_bill.addRow(new Object[]{
+                                    booking.getBooking_id(),
+                                    booking.getTour_id() + "-" + hdhdhd.getById(booking.getTour_id()).getTour_name() + "-" + String.format("%,.2f", hdhdhd.getById(booking.getTour_id()).getPrice()) + " đ",
+                                    booking.getCustomer_id() + "-" + fdfeee.getById(booking.getCustomer_id()).getCustomer_name(),
+                                    booking.getCustomer_number(),
+                                    String.format("%,.2f", booking.getTotal_cost())+" đ",
+                                    booking.getCreate_at()
+                            });
+                        
+                        billListTable.setModel(model_bill);
                     }
-                    if(bookingdto ==null) {
+                    if(booking ==null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin bill !");
                     }
                 }

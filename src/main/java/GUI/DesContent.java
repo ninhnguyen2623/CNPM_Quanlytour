@@ -138,16 +138,29 @@ public class DesContent extends JPanel{
                     int iddes = Integer.parseInt(desString.trim());
                     PlaceBUS placeBUS = new PlaceBUS();
                     
-                    PlaceDTO desDTO = placeBUS.getById(iddes);
-                    if(desDTO != null) {
-                        String iddesString = String.valueOf(desDTO.getPlace_id());
-                        txtIdDes.setText(iddesString);
-                        txtNameDes.setText(desDTO.getPlace_name());
-                        txtDescribeDes.setText(desDTO.getPlace_describe());
-                        txtAddressDes.setText(desDTO.getPlace_address());
-                        cmbRegionCode.setSelectedItem(desDTO.getRegion_code());
+                    PlaceDTO itemDes = placeBUS.getById(iddes);
+                    if(itemDes != null) {
+                    	DefaultTableModel model = new DefaultTableModel();
+                        model.addColumn("ID");;
+                        model.addColumn("Name Place");
+                        model.addColumn("Describe");
+                        model.addColumn("Region Code");
+                        model.addColumn("Address");
+                       
+                            model.addRow(new Object[] {
+                                    itemDes.getPlace_id(),itemDes.getPlace_name(),itemDes.getPlace_describe(),itemDes.getRegion_code(),itemDes.getPlace_address()
+                            });
+                        
+                        desListTable = new JTable();
+                        desListTable.setModel(model);
+                        sclListDes.setViewportView(desListTable);
+                        panel_4 = new JPanel();
+                        panel_4.setPreferredSize(new Dimension(50, 10));
+                        pnlContentDesDetail.add(panel_4, BorderLayout.EAST);
+          
+                        getDataFromJtableDes();
                     }
-                    if(desDTO == null) {
+                    if(itemDes == null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Place !");
                     }
                 }
@@ -155,21 +168,35 @@ public class DesContent extends JPanel{
                 	PlaceBUS placeBUS = new PlaceBUS();
                     ArrayList<PlaceDTO> desDTO = placeBUS.getAll();
                     Boolean checkKQ = false;
-                    for(PlaceDTO itemDesDTO: desDTO) {
-                        String temp = Normalizer.normalize(itemDesDTO.getPlace_name(), Normalizer.Form.NFD);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("ID");;
+                    model.addColumn("Name Place");
+                    model.addColumn("Describe");
+                    model.addColumn("Region Code");
+                    model.addColumn("Address");
+                    for(PlaceDTO itemDes: desDTO) {
+                        String temp = Normalizer.normalize(itemDes.getPlace_name(), Normalizer.Form.NFD);
                         String temp2 = Normalizer.normalize(desString, Normalizer.Form.NFD);
                         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
                         if(pattern.matcher(temp).replaceAll("").equalsIgnoreCase(pattern.matcher(temp2).replaceAll(""))) {
-                            String iddesString = String.valueOf(itemDesDTO.getPlace_id());
-                            txtIdDes.setText(iddesString);
-                            txtNameDes.setText(itemDesDTO.getPlace_name());
-                            txtDescribeDes.setText(itemDesDTO.getPlace_describe());
-                            txtAddressDes.setText(itemDesDTO.getPlace_address());
-                            cmbRegionCode.setSelectedItem(itemDesDTO.getRegion_code());
+                        
+                          
+                                model.addRow(new Object[] {
+                                        itemDes.getPlace_id(),itemDes.getPlace_name(),itemDes.getPlace_describe(),itemDes.getRegion_code(),itemDes.getPlace_address()
+                                });
+                            
 
                             checkKQ = true;
                         }
                     }
+                    desListTable = new JTable();
+                    desListTable.setModel(model);
+                    sclListDes.setViewportView(desListTable);
+                    panel_4 = new JPanel();
+                    panel_4.setPreferredSize(new Dimension(50, 10));
+                    pnlContentDesDetail.add(panel_4, BorderLayout.EAST);
+                    
+                    getDataFromJtableDes();
                     if(checkKQ == false) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Place !");
                     }

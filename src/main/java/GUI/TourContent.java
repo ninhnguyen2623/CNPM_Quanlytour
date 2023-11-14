@@ -739,31 +739,41 @@ public class TourContent extends JPanel{
                 if(isNumeric(shString)) {
                     TourDTO tourdto= tb.getById(Integer.parseInt(shString.trim()));
                     if(tourdto != null) {
-                        txtIdTour.setText( String.valueOf(tourdto.getTour_id()));
-                        txtNameTour.setText(tourdto.getTour_name());
-                        cbxDepTour.setSelectedItem(tourdto.getDeparture_place());
-                        cbxDesTour.setSelectedItem(tourdto.getRegion_code());
-                        VehicleBUS jjjjwrt = new VehicleBUS();
-                        VehicleDTO vhhh = jjjjwrt.getById(tourdto.getVehicle_id());
-//                        System.out.println(vhhh.toString());
-                        cbxVehicle.setSelectedItem(vhhh.getVehicle_id() + "-" + vhhh.getTenxe()+"-"+vhhh.getSuachua());
-                        HotelBUS hb = new HotelBUS();
-                        HotelDTO hd = hb.getById(tourdto.getHotel_id() );
-                        cbxHotel.setSelectedItem(hd.getHotel_id() + "-" + hd.getHotel_name());
-                        String date = tourdto.getStart_day();
-                        try {
-                            StartDay.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
+                    	 model_tour = new DefaultTableModel();
+                         model_tour.addColumn("Id");
+                         model_tour.addColumn("Name");
+                         model_tour.addColumn("Hotel");
+                         model_tour.addColumn("Vehicle");
+                         model_tour.addColumn("Region");
+                         model_tour.addColumn("Price");
+                         model_tour.addColumn("Start_day");
+                         model_tour.addColumn("End_day");
+                         model_tour.addColumn("Departure");
+                         model_tour.addColumn("Descirbe");
+                         model_tour.addColumn("Create at");
+                       
+                        ArrayList<TourDTO> tours = tb.getAll();
+   
+                        HotelBUS hotelbs = new HotelBUS();
+                        VehicleBUS vehiclebs = new VehicleBUS();
+                        for (TourDTO tour : tours) {
+                        	if(tour.getTour_id()==tourdto.getTour_id()) {
+                        		model_tour.addRow(new Object[]{
+                        				tour.getTour_id(),
+                        				tour.getTour_name(),
+                        				tour.getHotel_id() + "-" + hotelbs.getById(tour.getHotel_id()).getHotel_name(),
+                        				tour.getVehicle_id() + "-" + vehiclebs.getById(tour.getVehicle_id()).getTenxe() + "-" + vehiclebs.getById(tour.getVehicle_id()).getSuachua(),
+                        				tour.getRegion_code(),
+                        				String.format("%,.2f", tour.getPrice())+" đ",
+                        				tour.getStart_day(),
+                        				tour.getEnd_day(),
+                        				tour.getDeparture_place(),
+                        				tour.getSchedule_describe(),
+                        				tour.getCreate_at()
+                        		});
+                        	}
                         }
-                        date = tourdto.getEnd_day();
-                        try {
-                            EndDay.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                        txtSchedule.setText(tourdto.getSchedule_describe());
-                        txtPriceTour.setText(String.format("%,.2f", tourdto.getPrice()));
+                        tourListTable.setModel(model_tour);
                     }
                     if(tourdto ==null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Tour !");
@@ -772,36 +782,42 @@ public class TourContent extends JPanel{
                 if (!isNumeric(shString)) {
                     ArrayList<TourDTO> tourdtos = tb.getAll();
                     boolean checkKQ = false;
-                    for(TourDTO tourdto: tourdtos) {
-                        String temp = Normalizer.normalize(tourdto.getTour_name(), Normalizer.Form.NFD);
+                    HotelBUS hotelbs = new HotelBUS();
+                    VehicleBUS vehiclebs = new VehicleBUS();
+                    model_tour = new DefaultTableModel();
+                    model_tour.addColumn("Id");
+                    model_tour.addColumn("Name");
+                    model_tour.addColumn("Hotel");
+                    model_tour.addColumn("Vehicle");
+                    model_tour.addColumn("Region");
+                    model_tour.addColumn("Price");
+                    model_tour.addColumn("Start_day");
+                    model_tour.addColumn("End_day");
+                    model_tour.addColumn("Departure");
+                    model_tour.addColumn("Descirbe");
+                    model_tour.addColumn("Create at");
+                    for(TourDTO tour: tourdtos) {
+                        String temp = Normalizer.normalize(tour.getTour_name(), Normalizer.Form.NFD);
                         String temp2 = Normalizer.normalize(shString, Normalizer.Form.NFD);
                         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
                         if(pattern.matcher(temp).replaceAll("").equalsIgnoreCase(pattern.matcher(temp2).replaceAll(""))) {
-                            txtIdTour.setText( String.valueOf(tourdto.getTour_id()));
-                            txtNameTour.setText(tourdto.getTour_name());
-                            cbxDepTour.setSelectedItem(tourdto.getDeparture_place());
-                            cbxDesTour.setSelectedItem(tourdto.getRegion_code());
-                            HotelBUS hb = new HotelBUS();
-                            HotelDTO hd = hb.getById(tourdto.getHotel_id() );
-                            cbxHotel.setSelectedItem(hd.getHotel_id() + "-" + hd.getHotel_name());
-                            String date = tourdto.getStart_day();
-                            try {
-                                StartDay.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-                            } catch (ParseException e) {
-                                throw new RuntimeException(e);
-                            }
-                            date = tourdto.getEnd_day();
-                            try {
-                                EndDay.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-                            } catch (ParseException e) {
-                                throw new RuntimeException(e);
-                            }
-                            txtSchedule.setText(tourdto.getSchedule_describe());
-                            txtPriceTour.setText(String.valueOf(tourdto.getPrice()));
-                            checkKQ = true;
-                            break;
+                        	model_tour.addRow(new Object[]{
+                    				tour.getTour_id(),
+                    				tour.getTour_name(),
+                    				tour.getHotel_id() + "-" + hotelbs.getById(tour.getHotel_id()).getHotel_name(),
+                    				tour.getVehicle_id() + "-" + vehiclebs.getById(tour.getVehicle_id()).getTenxe() + "-" + vehiclebs.getById(tour.getVehicle_id()).getSuachua(),
+                    				tour.getRegion_code(),
+                    				String.format("%,.2f", tour.getPrice())+" đ",
+                    				tour.getStart_day(),
+                    				tour.getEnd_day(),
+                    				tour.getDeparture_place(),
+                    				tour.getSchedule_describe(),
+                    				tour.getCreate_at()
+                    		});
+                        	checkKQ = true;
                         }
                     }
+                    tourListTable.setModel(model_tour);
                     if(!checkKQ) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Tour !");
                     }
@@ -924,7 +940,7 @@ public class TourContent extends JPanel{
                 dep = Objects.requireNonNull(cbxDepTour.getSelectedItem()).toString(),
                 region = Objects.requireNonNull(cbxDesTour.getSelectedItem()).toString(),
                 hotel = Objects.requireNonNull(cbxHotel.getSelectedItem()).toString(),
-                		Vehicle = Objects.requireNonNull(cbxHotel.getSelectedItem()).toString(),
+                Vehicle = Objects.requireNonNull(cbxVehicle.getSelectedItem()).toString(),
                 startday = sdf.format(StartDay.getDate()),
                 endday = sdf.format(EndDay.getDate()),
                 desc =  txtSchedule.getText(),

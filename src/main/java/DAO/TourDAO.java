@@ -145,8 +145,10 @@ public class TourDAO implements DAO<TourDTO> {
             st.setString(7,tourDTO.getEnd_day());
             st.setString(8,tourDTO.getDeparture_place());
             st.setString(9,tourDTO.getSchedule_describe());
-            if (st.executeUpdate()>=1)
-                result = true;
+//            System.out.println(st.toString());
+            if (st.executeUpdate()>=1) {            	
+            	result = true;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

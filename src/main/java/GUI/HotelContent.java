@@ -135,19 +135,30 @@ public class HotelContent extends JPanel {
                 if(isNumeric(shString)== true) {
                     int idhotel = Integer.parseInt(shString.trim());
                     HotelBUS hotelBUS = new HotelBUS();
-                    HotelDTO hotelDTO = hotelBUS.getById(idhotel);
-                    if(hotelDTO != null) {
-                        String idhotelString = String.valueOf(hotelDTO.getHotel_id());
-                        txtIdHotel.setText(idhotelString);
-                        txtNameHotel.setText(hotelDTO.getHotel_name());
-                        txtAddressHotel.setText(hotelDTO.getAddress());
-                        String telhotelString = String.valueOf(hotelDTO.getTel());
-                        txtPhoneHotel.setText(telhotelString);
-                        txtWebHotel.setText(hotelDTO.getWebsite());
-                        cbxStartHotel.setSelectedItem(String.valueOf(hotelDTO.getStar()));
-                        cbxRegionHotel.setSelectedItem(hotelDTO.getRegion_code());
+                    HotelDTO itemHotel = hotelBUS.getById(idhotel);
+                    if(itemHotel != null) {
+                    	DefaultTableModel model = new DefaultTableModel();
+                        model.addColumn("ID");;
+                        model.addColumn("Name");
+                        model.addColumn("Address");
+                        model.addColumn("Tell");
+                        model.addColumn("Website");
+                        model.addColumn("Star");
+                        model.addColumn("Region_code");
+                  
+                            model.addRow(new Object[] {
+                                    itemHotel.getHotel_id(),itemHotel.getHotel_name(),itemHotel.getAddress(),itemHotel.getTel(),itemHotel.getWebsite(),itemHotel.getStar(),itemHotel.getRegion_code()
+                            });
+                        
+                        hotelListTable = new JTable();
+                        hotelListTable.setModel(model);
+                        sclListHotel.setViewportView(hotelListTable);
+                        panel_3 = new JPanel();
+                        panel_3.setPreferredSize(new Dimension(50, 10));
+                        pnlContentHotelDetail.add(panel_3, BorderLayout.EAST);
+                        getDataFromJtable();
                     }
-                    if(hotelDTO ==null) {
+                    if(itemHotel ==null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Hotel !");
                     }
                 }
@@ -156,23 +167,32 @@ public class HotelContent extends JPanel {
                 	HotelBUS hotelBUS = new HotelBUS();
                 	ArrayList<HotelDTO> arrhHotelDTOs = hotelBUS.getAll();
                     Boolean checkKQ = false;
-                    for(HotelDTO jjjHotelDTO: arrhHotelDTOs) {
-                        String temp = Normalizer.normalize(jjjHotelDTO.getHotel_name(), Normalizer.Form.NFD);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("ID");;
+                    model.addColumn("Name");
+                    model.addColumn("Address");
+                    model.addColumn("Tell");
+                    model.addColumn("Website");
+                    model.addColumn("Star");
+                    model.addColumn("Region_code");
+                    for(HotelDTO  itemHotel: arrhHotelDTOs) {
+                        String temp = Normalizer.normalize( itemHotel.getHotel_name(), Normalizer.Form.NFD);
                         String temp2 = Normalizer.normalize(shString, Normalizer.Form.NFD);
                         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
                         if(pattern.matcher(temp).replaceAll("").equalsIgnoreCase(pattern.matcher(temp2).replaceAll(""))) {
-                            String idhotelString = String.valueOf(jjjHotelDTO.getHotel_id());
-                            txtIdHotel.setText(idhotelString);
-                            txtNameHotel.setText(jjjHotelDTO.getHotel_name());
-                            txtAddressHotel.setText(jjjHotelDTO.getAddress());
-                            String telhotelString = String.valueOf(jjjHotelDTO.getTel());
-                            txtPhoneHotel.setText(telhotelString);
-                            txtWebHotel.setText(jjjHotelDTO.getWebsite());
-                            cbxStartHotel.setSelectedItem(String.valueOf(jjjHotelDTO.getStar()));
-                            cbxRegionHotel.setSelectedItem(jjjHotelDTO.getRegion_code());
+                        	 model.addRow(new Object[] {
+                                     itemHotel.getHotel_id(),itemHotel.getHotel_name(),itemHotel.getAddress(),itemHotel.getTel(),itemHotel.getWebsite(),itemHotel.getStar(),itemHotel.getRegion_code()
+                             });
                             checkKQ = true;
                         }
                     }
+                    hotelListTable = new JTable();
+                    hotelListTable.setModel(model);
+                    sclListHotel.setViewportView(hotelListTable);
+                    panel_3 = new JPanel();
+                    panel_3.setPreferredSize(new Dimension(50, 10));
+                    pnlContentHotelDetail.add(panel_3, BorderLayout.EAST);
+                    getDataFromJtable();
                     if(checkKQ == false) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Hotel !");
                     }
@@ -605,6 +625,7 @@ public class HotelContent extends JPanel {
         	i++;
         }
         txtIdHotel.setText(Integer.toString(i+1));
+        ClassLoaddataHotel();
     }
     public void getDataFromJtable() {
         List<HotelDTO> hotelDTO = new ArrayList<HotelDTO>();

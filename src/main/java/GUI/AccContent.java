@@ -416,6 +416,15 @@ public class AccContent extends JPanel {
 
     private void loadAccData() {
         // load account table
+    	 model_acc = new DefaultTableModel();
+         model_acc.addColumn("Id");
+         model_acc.addColumn("User_name");
+         model_acc.addColumn("Password");
+         model_acc.addColumn("Fullname");
+         model_acc.addColumn("Tel");
+         model_acc.addColumn("Birthday");
+         model_acc.addColumn("Gender");
+         model_acc.addColumn("Role");
         UserBUS ubs = new UserBUS();
         ArrayList<UserDTO> users = ubs.getAll();
         String new_id = String.valueOf(users.get(users.size()-1).getUser_id()+1);
@@ -575,33 +584,48 @@ public class AccContent extends JPanel {
                 String shString = txtSearchAcc.getText().trim();
                 UserBUS ubs = new UserBUS();
                 if(isNumeric(shString)) {
-                    UserDTO udo= ubs.getById(Integer.parseInt(shString.trim()));
-                    if(udo != null) {
-                        txtIdAcc.setText(String.valueOf(udo.getUser_id()) );
-                        txtUserNameAcc.setText(udo.getUser_name());
-                        txtPassAcc.setText(udo.getPassword());
-                        txtEmpName.setText(udo.getFullname());
+                    UserDTO user = ubs.getById(Integer.parseInt(shString.trim()));
+                    if(user != null) {
+                    	 model_acc = new DefaultTableModel();
+                         model_acc.addColumn("Id");
+                         model_acc.addColumn("User_name");
+                         model_acc.addColumn("Password");
+                         model_acc.addColumn("Fullname");
+                         model_acc.addColumn("Tel");
+                         model_acc.addColumn("Birthday");
+                         model_acc.addColumn("Gender");
+                         model_acc.addColumn("Role");
+                
+                            model_acc.addRow(new Object[] {
+                                    user.getUser_id(),
+                                    user.getUser_name(),
+                                    user.getPassword(),
+                                    user.getFullname(),
+                                    user.getTel(),
+                                    user.getBirthday(),
+                                    user.getGender(),
+                                    user.getRole_id()
 
-                        String date = udo.getBirthday();
-                        try {
-                            OldEmp.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        if (Objects.equals(udo.getGender(), "nam")) {
-                            rdbtnMaleEmp.isSelected();
-                        } else  rdbtnFemaleEmp.isSelected();
-
-                        txtEmpTel.setText(udo.getTel());
+                            });
+                        
+                        accListTable.setModel(model_acc);
                     }
-                    if(udo ==null) {
+                    if(user ==null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Account !");
                     }
                 }
                 if (!isNumeric(shString)) {
                     ArrayList<UserDTO> users = ubs.getAll();
                     boolean checkKQ = false;
+                    model_acc = new DefaultTableModel();
+                    model_acc.addColumn("Id");
+                    model_acc.addColumn("User_name");
+                    model_acc.addColumn("Password");
+                    model_acc.addColumn("Fullname");
+                    model_acc.addColumn("Tel");
+                    model_acc.addColumn("Birthday");
+                    model_acc.addColumn("Gender");
+                    model_acc.addColumn("Role");
                     for(UserDTO user : users) {
                         String temp = Normalizer.normalize(user.getUser_name(), Normalizer.Form.NFD);
                         String temp1 = Normalizer.normalize(user.getFullname(), Normalizer.Form.NFD);
@@ -610,27 +634,22 @@ public class AccContent extends JPanel {
                         boolean check =pattern.matcher(temp).replaceAll("").equalsIgnoreCase(pattern.matcher(temp2).replaceAll(""));
                         boolean check1 =pattern.matcher(temp1).replaceAll("").equalsIgnoreCase(pattern.matcher(temp2).replaceAll(""));
                         if(check || check1) {
-                            txtIdAcc.setText(String.valueOf(user.getUser_id()) );
-                            txtUserNameAcc.setText(user.getUser_name());
-                            txtPassAcc.setText(user.getPassword());
-                            txtEmpName.setText(user.getFullname());
+                        	model_acc.addRow(new Object[] {
+                                    user.getUser_id(),
+                                    user.getUser_name(),
+                                    user.getPassword(),
+                                    user.getFullname(),
+                                    user.getTel(),
+                                    user.getBirthday(),
+                                    user.getGender(),
+                                    user.getRole_id()
 
-                            String date = user.getBirthday();
-                            try {
-                                OldEmp.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-                            } catch (ParseException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                            if (Objects.equals(user.getGender(), "nam")) {
-                                rdbtnMaleEmp.setSelected(true);
-                            } else  rdbtnFemaleEmp.setSelected(true);
-
-                            txtEmpTel.setText(user.getTel());
+                            });
                             checkKQ = true;
                             break;
                         }
                     }
+                    accListTable.setModel(model_acc);
                     if(!checkKQ) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Account !");
                     }

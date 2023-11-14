@@ -126,15 +126,28 @@ public class SerContent extends JPanel {
                     int idser = Integer.parseInt(serString.trim());
                     
                     ServiceBUS serviceBUS = new ServiceBUS(); 
-                    ServiceDTO serviceDTO = serviceBUS.getById(idser);
-                    if(serviceDTO != null) {
-                        String idserString = String.valueOf(serviceDTO.getService_id());
-                        txtIdSer.setText(idserString);
-                        txtNameSer.setText(serviceDTO.getService_name());
-                        String priceser = String.valueOf(serviceDTO.getService_price());
-                        txtPriceSer.setText(priceser);
+                    ServiceDTO  itemService = serviceBUS.getById(idser);
+                    if( itemService != null) {
+                    	DefaultTableModel model = new DefaultTableModel();
+                        model.addColumn("ID");;
+                        model.addColumn("Name Service");
+                        model.addColumn("Price");
+           
+                        
+                            model.addRow(new Object[] {
+                                    itemService.getService_id(),itemService.getService_name(),itemService.getService_price()
+                            });
+                       
+                        serListTable = new JTable();
+                        serListTable.setModel(model);
+                        sclListSer.setViewportView(serListTable);
+                        panel_3 = new JPanel();
+                        panel_3.setPreferredSize(new Dimension(50, 10));
+                        pnlContentSerDetail.add(panel_3, BorderLayout.EAST);
+                        getDataFromJtableSer();
+              
                     }
-                    if(serviceDTO == null) {
+                    if( itemService == null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Service !");
                     }
                 }
@@ -143,19 +156,28 @@ public class SerContent extends JPanel {
                 	
                     ArrayList<ServiceDTO> serDTO = serviceBUS.getAll();
                     Boolean checkKQ = false;
-                    for(ServiceDTO itemServiceDTO: serDTO) {
-                        String temp = Normalizer.normalize(itemServiceDTO.getService_name(), Normalizer.Form.NFD);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn("ID");;
+                    model.addColumn("Name Service");
+                    model.addColumn("Price");
+                    for(ServiceDTO itemService: serDTO) {
+                        String temp = Normalizer.normalize(itemService.getService_name(), Normalizer.Form.NFD);
                         String temp2 = Normalizer.normalize(serString, Normalizer.Form.NFD);
                         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
                         if(pattern.matcher(temp).replaceAll("").equalsIgnoreCase(pattern.matcher(temp2).replaceAll(""))) {
-                            String idserString = String.valueOf(itemServiceDTO.getService_id());
-                            txtIdSer.setText(idserString);
-                            txtNameSer.setText(itemServiceDTO.getService_name());
-                            String priceser = String.valueOf(itemServiceDTO.getService_price());
-                            txtPriceSer.setText(priceser);
+                        	 model.addRow(new Object[] {
+                                     itemService.getService_id(),itemService.getService_name(),itemService.getService_price()
+                             });
                             checkKQ = true;
                         }
                     }
+                    serListTable = new JTable();
+                    serListTable.setModel(model);
+                    sclListSer.setViewportView(serListTable);
+                    panel_3 = new JPanel();
+                    panel_3.setPreferredSize(new Dimension(50, 10));
+                    pnlContentSerDetail.add(panel_3, BorderLayout.EAST);
+                    getDataFromJtableSer();
                     if(checkKQ == false) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin Service !");
                     }
@@ -522,6 +544,7 @@ public class SerContent extends JPanel {
            
         }
         txtIdSer.setText(Integer.toString(i+1));
+        ClassLoaddataService();
     }
     public void getDataFromJtableSer() {
         List<ServiceDTO> serviceDTO = new ArrayList<ServiceDTO>();
