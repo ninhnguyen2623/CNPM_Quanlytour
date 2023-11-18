@@ -646,12 +646,12 @@ public class Manager extends JFrame {
         pnlStatistical.setBackground(new Color(66, 165, 243));
         pnlListDetail.add(pnlStatistical);
         pnlStatistical.setLayout(new GridLayout(0, 1, 0, 0));
-
-        pnlExportExcel = new JPanel();
-        pnlExportExcel.setBounds(0, 3, 172, 34);
-        pnlExportExcel.setBackground(new Color(66, 165, 243));
-        pnlListDetail.add(pnlExportExcel);
-        pnlExportExcel.setLayout(new GridLayout(0, 1, 0, 0));
+//
+//        pnlExportExcel = new JPanel();
+//        pnlExportExcel.setBounds(0, 3, 172, 34);
+//        pnlExportExcel.setBackground(new Color(66, 165, 243));
+//        pnlListDetail.add(pnlExportExcel);
+//        pnlExportExcel.setLayout(new GridLayout(0, 1, 0, 0));
 
 
         lblTourManager = new JLabel("   Tour Manager");
@@ -726,14 +726,14 @@ public class Manager extends JFrame {
         pnlStatistical.add(lblStatistical);
         lblStatistical.addMouseListener(mouseListener);
 
-        lblExportExcel = new JLabel("   Excel");
-        lblExportExcel.setPreferredSize(new Dimension(76, 41));
-		lblExportExcel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/excel.png"))));
-        lblExportExcel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        lblExportExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        pnlExportExcel.add(lblExportExcel);
-        lblExportExcel.addMouseListener(mouseListener);
-		
+//        lblExportExcel = new JLabel("   Excel");
+//        lblExportExcel.setPreferredSize(new Dimension(76, 41));
+//		lblExportExcel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/excel.png"))));
+//        lblExportExcel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+//        lblExportExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//        pnlExportExcel.add(lblExportExcel);
+//        lblExportExcel.addMouseListener(mouseListener);
+//		
 		/* 
 		Create pnlMainContent to contain pnlTourContent, pnlCusContent, pnlStaffContent, pnlBillContent,
 		pnlSerContent, pnlHotelContent, pnlVehContent, pnlAccContent, pnlStatisticalContent
@@ -781,8 +781,8 @@ public class Manager extends JFrame {
         pnlMainContent.add(pnlStatisticalContent, "pnlStatisticalContent");
 
         // ------------------------------ Tạo form nhập xuất excel ------------------------------
-        pnlExportExcelContent = new ExcelContent();
-        pnlMainContent.add(pnlExportExcelContent, "pnlExportExcelContent");
+//        pnlExportExcelContent = new ExcelContent();
+//        pnlMainContent.add(pnlExportExcelContent, "pnlExportExcelContent");
 
 
     }

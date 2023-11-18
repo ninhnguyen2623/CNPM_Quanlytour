@@ -11,14 +11,22 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Cursor;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
 
 import com.google.protobuf.TextFormat.ParseException;
 import com.toedter.calendar.JDateChooser;
 
+import BUS.BookingBUS;
 import BUS.CustomerBUS;
 import BUS.TourBUS;
 import DAO.BookingDAO;
@@ -37,8 +45,11 @@ import javax.swing.JTextField;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
@@ -66,6 +77,7 @@ public class StatisticsContent extends JPanel {
 	private JLabel lblNewLabel_3;
 	private JPanel panel_6;
 	private JButton btnShowChart_Booking;
+	private JButton btnShowExcel;
 	private JPanel pnlDetailBookingList;
 	private JComboBox cbxYear_Booking;
 	private JPanel pnlTourList;
@@ -253,7 +265,9 @@ public class StatisticsContent extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 				ChartBooking Chart_Booking = new ChartBooking();
-				Chart_Booking.main(items16);
+				ChartTour dfdf  = new ChartTour();
+				dfdf.main(items16);
+//				Chart_Booking.main(items16);
 			}
 		});
 		btnShowChart_Booking.setContentAreaFilled(false);
@@ -469,7 +483,77 @@ public class StatisticsContent extends JPanel {
 		btnView_price_date.setContentAreaFilled(false);
 		panel_6.add(btnView_price_date);
 		
+		btnShowExcel = new JButton("Export excel");
+		btnShowExcel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 TableModel model2 = BookingTable.getModel();
+	                ArrayList<Integer> arrayListIdtour = new ArrayList<>();
+	                int rowCount = model2.getRowCount();
+	                System.out.println(rowCount);
+	                for (int row = 0; row < rowCount; row++) {  
+	                	    int id = Integer.parseInt(model2.getValueAt(row, 0).toString());
+	                	    arrayListIdtour.add(id);	
+//	                	    System.out.println(id);
+	                }
+	                
+	                try {
+	                    JFileChooser jfile = new JFileChooser();
+	                    jfile.setSelectedFile(new File("untitled.xls"));
 
+	                    int seleted = jfile.showSaveDialog(jfile);
+
+	                    if (seleted == JFileChooser.APPROVE_OPTION) {
+	                        String FilePath = jfile.getSelectedFile().getPath();
+	                        System.out.println(FilePath);
+
+	                        HSSFWorkbook workbook = new HSSFWorkbook();
+	                        HSSFSheet sheet = workbook.createSheet("account");
+	                        BookingBUS bookingBUS = new BookingBUS();
+	                        int rowPos = 0;
+	                        HSSFRow row = sheet.createRow(rowPos);
+	                        row.createCell(0, CellType.NUMERIC).setCellValue("Booking_Id");
+	                        row.createCell(1, CellType.STRING).setCellValue("Tour_id");
+	                        row.createCell(2, CellType.STRING).setCellValue("Customer_id");
+	                        row.createCell(3, CellType.STRING).setCellValue("Customer_number");
+	                        row.createCell(4, CellType.STRING).setCellValue("Total_cost");
+	                        row.createCell(5, CellType.STRING).setCellValue("Create_at");
+	                        TourBUS tourbs = new TourBUS();
+	                        CustomerBUS cusbs = new CustomerBUS();
+	                        for (int a: arrayListIdtour) {
+	                        	BookingDTO jejejr = bookingBUS.getById(a);
+	                        	rowPos++;
+	                        	row = sheet.createRow(rowPos);
+	                            row.createCell(0, CellType.NUMERIC).setCellValue(jejejr.getBooking_id());
+	                            row.createCell(1, CellType.STRING).setCellValue(jejejr.getTour_id()+"-"+tourbs.getById(jejejr.getTour_id()).getTour_name());
+	                            row.createCell(2, CellType.STRING).setCellValue(jejejr.getCustomer_id()+"-"+cusbs.getById(jejejr.getCustomer_id()).getCustomer_name());
+	                            row.createCell(3, CellType.STRING).setCellValue(jejejr.getCustomer_number());
+	                            row.createCell(4, CellType.STRING).setCellValue(String.format("%,.2f", jejejr.getTotal_cost())+" đ");
+	                            row.createCell(5, CellType.STRING).setCellValue(jejejr.getCreate_at().toString());
+	                        }
+	                        File file = new File(FilePath);
+	                        try {
+	                            FileOutputStream fos = new FileOutputStream(file);
+	                            workbook.write(fos);
+	                            fos.close();
+
+	                        } catch (Exception ex) {
+	                            System.out.println("GUI.Table.jButton1MouseClicked()");
+	                        }
+
+	                    }
+	                    if (seleted == JFileChooser.CANCEL_OPTION) {
+	                    }
+
+	                } catch (Exception ex) {
+	                }
+	                
+	                
+	                
+			}
+		});
+
+		btnShowExcel.setContentAreaFilled(false);
+		panel_6.add(btnShowExcel);
 		
 		
 		pnlDetailBookingList = new JPanel();

@@ -2,6 +2,7 @@ import DAO.TourDAO;
 import DAO.VehicleDAO;
 import DTO.TourDTO;
 import DTO.VehicleDTO;
+import GUI.ChartTour;
 import GUI.Manager;
 import GUI.SignIn;
 import GUI.VehicleContent;
@@ -29,6 +30,8 @@ public class Main{
 ////         String formattedNumber = String.format("%,.2f", d).replaceAll("\\.", "").replace(",", ".");
 //         double d3 = Double.parseDouble(formattedNumber1);
 //         System.out.println(d3);
+    	
+    	
 //       
     }
 }
