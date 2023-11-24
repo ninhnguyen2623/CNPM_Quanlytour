@@ -214,7 +214,7 @@ public class StatisticsContent extends JPanel {
 		panel_4.add(lblBy);
 		
 		cbxMonth_Booking = new JComboBox();
-		cbxMonth_Booking.setModel(new DefaultComboBoxModel(new String[] {"0","1000000.0000","2000000.0000","3000000.0000","4000000.0000","5000000.0000","6000000.0000","7000000.0000","8000000.0000","9000000.0000","10000000.0000","20000000.0000","30000000.0000","40000000.0000","50000000.0000"}));
+		cbxMonth_Booking.setModel(new DefaultComboBoxModel(new String[] {"0","1.000.000,00","2.000.000,00","3.000.000,00","4.000.000,00","5.000.000,00","6.000.000,00","7.000.000,00","8.000.000,00","9.000.000,00","10.000.000,00","20.000.000,00","30.000.000,00","40.000.000,00","50.000.000,00"}));
 		panel_4.add(cbxMonth_Booking);
 		
 		
@@ -222,7 +222,7 @@ public class StatisticsContent extends JPanel {
 		panel_4.add(lblNewLabel_4);
 		
 		cbxYear_Booking = new JComboBox();
-		cbxYear_Booking.setModel(new DefaultComboBoxModel(new String[] {"1000000.0000","2000000.0000","3000000.0000","4000000.0000","5000000.0000","6000000.0000","7000000.0000","8000000.0000","9000000.0000","10000000.0000","20000000.0000","30000000.0000","40000000.0000","50000000.0000","60000000.0000"}));
+		cbxYear_Booking.setModel(new DefaultComboBoxModel(new String[] {"1.000.000,00","2.000.000,00","3.000.000,00","4.000.000,00","5.000.000,00","6.000.000,00","7.000.000,00","8.000.000,00","9.000.000,00","10.000.000,00","20.000.000,00","30.000.000,00","40.000.000,00","50.000.000,00","60.000.000,00"}));
 		panel_4.add(cbxYear_Booking);
 		
 		
@@ -281,22 +281,26 @@ public class StatisticsContent extends JPanel {
 
 		btnView_Booking.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
+		    	
+		    	
 		    	String startprice = (String) cbxMonth_Booking.getSelectedItem();
 		    	String endprice = (String) cbxYear_Booking.getSelectedItem();
+		    	String formattedNumber1 = startprice.replaceAll("[^0-9,]", "").replaceAll("\\.", "").replace(",", ".");
+		    	String formattedNumber2 = endprice.replaceAll("[^0-9,]", "").replaceAll("\\.", "").replace(",", ".");
 //		    	System.out.println(Double.parseDouble(startprice));
 		    	DefaultTableModel model = new DefaultTableModel();
 		    	model.addColumn("ID");
-		    	model.addColumn("Tour ID");
+		    	model.addColumn("Tour");
 		    	model.addColumn("Customer");
 		    	model.addColumn("Customer Number");
 		    	model.addColumn("Total Price");
 		    	model.addColumn("Create_At");
 		    	
-		    	if(Double.parseDouble(startprice) > Double.parseDouble(endprice)) {
+		    	if(Double.parseDouble(formattedNumber1) > Double.parseDouble(formattedNumber2)) {
 		    		 JOptionPane.showMessageDialog(null, "giá bắt đầu phải nhỏ hơn giá kết thúc !");
 		    		 return;
 		    	}
-		    	if(Double.parseDouble(startprice) <= Double.parseDouble(endprice)) {
+		    	if(Double.parseDouble(formattedNumber1) <= Double.parseDouble(formattedNumber2)) {
 		    		Boolean checkkqBoolean = false;
 			    	ArrayList<BookingDTO> data = BookingDAO.getInstance().getAll();
 		                TourBUS tourbs = new TourBUS();
@@ -304,7 +308,7 @@ public class StatisticsContent extends JPanel {
 		                	Double sumpce = .0;
 		                for(BookingDTO BookingDTO: data) {
 	                        Double stprice = BookingDTO.getTotal_cost();
-	                        if(stprice >= Double.parseDouble(startprice) && stprice <= Double.parseDouble(endprice) ) { 
+	                        if(stprice >= Double.parseDouble(formattedNumber1) && stprice <= Double.parseDouble(formattedNumber2) ) { 
 	                        	String formatpricce = String.format("%,.2f", BookingDTO.getTotal_cost());
 	                        	model.addRow(new Object[] {
 	                        			BookingDTO.getBooking_id(),BookingDTO.getTour_id() + "-" + tourbs.getById(BookingDTO.getTour_id()).getTour_name(),BookingDTO.getCustomer_id() + "-" + cusbs.getById(BookingDTO.getCustomer_id()).getCustomer_name(),BookingDTO.getCustomer_number(),formatpricce+" đ",BookingDTO.getCreate_at()
@@ -350,7 +354,7 @@ public class StatisticsContent extends JPanel {
 	                
 	                DefaultTableModel model = new DefaultTableModel();
 	                model.addColumn("ID");
-	                model.addColumn("Tour ID");
+	                model.addColumn("Tour");
 	                model.addColumn("Customer");
 	                model.addColumn("Customer Number");
 	                model.addColumn("Total Price");
@@ -416,22 +420,24 @@ public class StatisticsContent extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String startprice = (String) cbxMonth_Booking.getSelectedItem();
 		    	String endprice = (String) cbxYear_Booking.getSelectedItem();
+		    	String formattedNumber1 = startprice.replaceAll("[^0-9,]", "").replaceAll("\\.", "").replace(",", ".");
+		    	String formattedNumber2 = endprice.replaceAll("[^0-9,]", "").replaceAll("\\.", "").replace(",", ".");
 		    	Date startdt = OldBookingstart.getDate();
 				Date enddt = OldBookingend.getDate();
 //		    	System.out.println(Double.parseDouble(startprice));
 		    	DefaultTableModel model = new DefaultTableModel();
 		    	model.addColumn("ID");
-		    	model.addColumn("Tour ID");
+		    	model.addColumn("Tour ");
 		    	model.addColumn("Customer");
 		    	model.addColumn("Customer Number");
 		    	model.addColumn("Total Price");
 		    	model.addColumn("Create_At");
 		    	 Double sumpce = .0;
-		    	if(Double.parseDouble(startprice) > Double.parseDouble(endprice) && startdt.after(enddt) && startdt == null || enddt == null) {
+		    	if(Double.parseDouble(formattedNumber1) > Double.parseDouble(formattedNumber2) && startdt.after(enddt) && startdt == null || enddt == null) {
 		    		 JOptionPane.showMessageDialog(null, "giá bắt đầu phải nhỏ hơn giá kết thúc và ngày bắt đầu phải lớn hơn ngày kết thúc và ngày không được để trống !");
 		    		 return;
 		    	}
-		    	if(Double.parseDouble(startprice) <= Double.parseDouble(endprice) && startdt.before(enddt)) {
+		    	if(Double.parseDouble(formattedNumber1) <= Double.parseDouble(formattedNumber2) && startdt.before(enddt)) {
 		    		Boolean checkkqBoolean = false;
 			    	ArrayList<BookingDTO> data = BookingDAO.getInstance().getAll();
 		                TourBUS tourbs = new TourBUS();
@@ -445,7 +451,7 @@ public class StatisticsContent extends JPanel {
 	                        String formatpricce = String.format("%,.2f", BookingDTO.getTotal_cost());
 	                        try {
 								date4 = formatter4.parse(date2);
-								if(stprice >= Double.parseDouble(startprice) && stprice <= Double.parseDouble(endprice) && date4.after(startdt)  && date4.before(enddt)) { 
+								if(stprice >= Double.parseDouble(formattedNumber1) && stprice <= Double.parseDouble(formattedNumber2) && date4.after(startdt)  && date4.before(enddt)) { 
 		                        	model.addRow(new Object[] {
 		                        			BookingDTO.getBooking_id(),BookingDTO.getTour_id() + "-" + tourbs.getById(BookingDTO.getTour_id()).getTour_name(),BookingDTO.getCustomer_id() + "-" + cusbs.getById(BookingDTO.getCustomer_id()).getCustomer_name(),BookingDTO.getCustomer_number(),formatpricce +" đ",BookingDTO.getCreate_at()
 		                        	});
@@ -512,8 +518,8 @@ public class StatisticsContent extends JPanel {
 	                        int rowPos = 0;
 	                        HSSFRow row = sheet.createRow(rowPos);
 	                        row.createCell(0, CellType.NUMERIC).setCellValue("Booking_Id");
-	                        row.createCell(1, CellType.STRING).setCellValue("Tour_id");
-	                        row.createCell(2, CellType.STRING).setCellValue("Customer_id");
+	                        row.createCell(1, CellType.STRING).setCellValue("Tour");
+	                        row.createCell(2, CellType.STRING).setCellValue("Customer");
 	                        row.createCell(3, CellType.STRING).setCellValue("Customer_number");
 	                        row.createCell(4, CellType.STRING).setCellValue("Total_cost");
 	                        row.createCell(5, CellType.STRING).setCellValue("Create_at");

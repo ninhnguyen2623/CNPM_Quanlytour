@@ -416,8 +416,8 @@ public class BillContent extends JPanel {
     private void loadBillData() {
     	model_bill = new DefaultTableModel();
         model_bill.addColumn("Id");
-        model_bill.addColumn("Tour_id");
-        model_bill.addColumn("Customer_id");
+        model_bill.addColumn("Tour");
+        model_bill.addColumn("Customer");
         model_bill.addColumn("Customer_number");
         model_bill.addColumn("Total_cost");
         model_bill.addColumn("Create_at");
