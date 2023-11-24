@@ -250,25 +250,25 @@ public class SignIn extends JFrame {
 		btnLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		pnlSignIn.add(btnLogin);
 		
-		btnForgetPassword = new JButton("Forget Password ?");
-		btnForgetPassword.addActionListener(action);
-		btnForgetPassword.setBorderPainted(false);
-		btnForgetPassword.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnForgetPassword.setContentAreaFilled(false);
-		btnForgetPassword.setFont(new Font("Arial", Font.PLAIN, 11));
-		btnForgetPassword.setFocusPainted(false);
-		btnForgetPassword.setBounds(146, 350, 131, 20);
-		pnlSignIn.add(btnForgetPassword);
+//		btnForgetPassword = new JButton("Forget Password ?");
+//		btnForgetPassword.addActionListener(action);
+//		btnForgetPassword.setBorderPainted(false);
+//		btnForgetPassword.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//		btnForgetPassword.setContentAreaFilled(false);
+//		btnForgetPassword.setFont(new Font("Arial", Font.PLAIN, 11));
+//		btnForgetPassword.setFocusPainted(false);
+//		btnForgetPassword.setBounds(146, 350, 131, 20);
+//		pnlSignIn.add(btnForgetPassword);
 
-		btnRegister = new JButton("Register Now");
-		btnRegister.addActionListener(action);
-		btnRegister.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnRegister.setContentAreaFilled(false);
-		btnRegister.setFocusPainted(false);
-		btnRegister.setBorderPainted(false);
-		btnRegister.setFont(new Font("Arial", Font.PLAIN, 11));
-		btnRegister.setBounds(162, 380, 100, 20);
-		pnlSignIn.add(btnRegister);		
+//		btnRegister = new JButton("Register Now");
+//		btnRegister.addActionListener(action);
+//		btnRegister.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//		btnRegister.setContentAreaFilled(false);
+//		btnRegister.setFocusPainted(false);
+//		btnRegister.setBorderPainted(false);
+//		btnRegister.setFont(new Font("Arial", Font.PLAIN, 11));
+//		btnRegister.setBounds(162, 380, 100, 20);
+//		pnlSignIn.add(btnRegister);		
 	}
 	
 	// Show Password
