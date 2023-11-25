@@ -312,6 +312,14 @@ public class SignIn extends JFrame {
 		//Lay username & password
 		String username = txtUserName.getText();
 		String password = String.valueOf(txtPass.getPassword());
+		if(txtUserName.getText().equals("")) {
+			JOptionPane.showMessageDialog(null,"Không để trống tên đăng nhập !");
+			return;
+		}
+		if(password.equals("")) {
+			JOptionPane.showMessageDialog(null,"Không để trống mật khẩu !");
+			return;
+		}
 		//Kiem tra Db
 		UserBUS ubs = new UserBUS();
 		System.out.println(ubs.CheckUser(username,password));

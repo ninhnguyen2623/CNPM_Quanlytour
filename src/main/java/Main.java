@@ -17,10 +17,10 @@ import BUS.VehicleBUS;
 public class Main{
 	
     public static void main(String[] args) {
-//       SignIn si = new SignIn();
-//       si.setVisible(true);
-    	 Manager sss = new Manager();
-    	 sss.setVisible(true);
+       SignIn si = new SignIn();
+       si.setVisible(true);
+//    	 Manager sss = new Manager();
+//    	 sss.setVisible(true);
 //////    	
 //    	 String input = "1234567890.123456";
 //         double d = Double.parseDouble(input);
