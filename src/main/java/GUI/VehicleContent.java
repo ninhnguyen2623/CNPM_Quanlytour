@@ -5,6 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -21,12 +22,14 @@ import javax.swing.table.TableModel;
 import BUS.HotelBUS;
 import BUS.VehicleBUS;
 import DAO.VehicleDAO;
+import DTO.CustomerDTO;
 import DTO.HotelDTO;
 import DTO.VehicleDTO;
 
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.security.auth.Refreshable;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -112,6 +115,10 @@ public class VehicleContent extends JPanel {
 		btn_search_vehicle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String shString = txt_serch.getText().trim();
+				if(txt_serch.getText().equals("")) {
+					  JOptionPane.showMessageDialog(null, "vui lòng nhập thông tin tìm kiếm !");
+                      return;
+				}
                 if(isNumeric(shString)== true) {
                     int idhotel = Integer.parseInt(shString.trim());
                     VehicleBUS vehicleBUS = new VehicleBUS();
@@ -132,6 +139,7 @@ public class VehicleContent extends JPanel {
                     }
                     if(vehicleDTO ==null) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin vehicle !");
+                        return;
                     }
                 }
                 if (isNumeric(shString)== false) {
@@ -161,12 +169,14 @@ public class VehicleContent extends JPanel {
                     }
                     if(checkKQ == false) {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin vehicle !");
+                        return;
                     }
                 }
 			}
 		});
 		btn_search_vehicle.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btn_search_vehicle.setBounds(703, 66, 87, 29);
+		btn_search_vehicle.setBackground(new Color(66, 165, 243));
 		add(btn_search_vehicle);
 		
 		JButton btn_them = new JButton("THÊM");
@@ -189,7 +199,7 @@ public class VehicleContent extends JPanel {
                 String loaixe = txt_laoixe.getText();
                 String trangthai =(String)cbx_trangthai.getSelectedItem();
                 String suachua =(String)cbx_suachua.getSelectedItem();
-                if(txt_id.getText() == "" || txt_phuongtien.getText() == "" || txt_laoixe.getText() == "") {
+                if(txt_id.getText().equals("") || txt_phuongtien.getText().equals("")|| txt_laoixe.getText().equals("")){
                 	JOptionPane.showMessageDialog(null,"Dữ liệu không được để trống hoặc sai sót!!");
                 	return;
                 }
@@ -217,7 +227,8 @@ public class VehicleContent extends JPanel {
 			}
 		});
 		btn_them.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_them.setBounds(235, 270, 129, 29);
+		btn_them.setBounds(168, 270, 129, 29);
+		btn_them.setBackground(new Color(66, 165, 243));
 		add(btn_them);
 		
 		
@@ -255,6 +266,7 @@ public class VehicleContent extends JPanel {
                     }
                     if(checkid == false) {
                     	JOptionPane.showMessageDialog(null,"id khong ton tai !");
+                    	return;
                     }
                     else {
                     	VehicleDTO vehicledto = new VehicleDTO(idVehicle,tenxe,loaixe,trangthai,suachua);
@@ -272,10 +284,11 @@ public class VehicleContent extends JPanel {
 			}
 		});
 		btn_capnhat.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_capnhat.setBounds(418, 270, 129, 29);
+		btn_capnhat.setBounds(331, 270, 129, 29);
+		btn_capnhat.setBackground(new Color(66, 165, 243));
 		add(btn_capnhat);
 		
-		JButton btn_refesh = new JButton("REFESH");
+		JButton btn_refesh = new JButton("REFRESH");
 		btn_refesh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RefeshVehicle();
@@ -283,7 +296,8 @@ public class VehicleContent extends JPanel {
 			}
 		});
 		btn_refesh.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btn_refesh.setBounds(589, 270, 129, 29);
+		btn_refesh.setBounds(661, 270, 129, 29);
+		btn_refesh.setBackground(new Color(66, 165, 243));
 		add(btn_refesh);
 		
 		JLabel lblId = new JLabel("ID");
@@ -305,8 +319,51 @@ public class VehicleContent extends JPanel {
 		
 		cbx_suachua = new JComboBox();
 		cbx_suachua.setBounds(381, 239, 322, 22);
-		cbx_suachua.setModel(new DefaultComboBoxModel(new String[] {"không","bảo chì","sửa chữa"}));
+		cbx_suachua.setModel(new DefaultComboBoxModel(new String[] {"không","bảo trì","sửa chữa"}));
 		add(cbx_suachua);
+		
+		JButton btn_delete = new JButton("DELETE");
+		btn_delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VehicleBUS ddd = new VehicleBUS();
+				String idString = txt_id.getText().trim();
+                int idVehicle = 0;
+                boolean checkid = false;
+                if(isNumeric(idString)==false) {
+                	JOptionPane.showMessageDialog(null, "ID phải là số !");
+                	checkid = true;
+                	return;
+                }
+                if(isNumeric(idString)==true) {
+                    idVehicle = Integer.parseInt(idString.trim());
+                }
+                ArrayList<VehicleDTO> ve = ddd.getAll();
+                for(VehicleDTO kkk: ve) {
+                	if(kkk.getVehicle_id()==idVehicle) {
+                		checkid = true;
+                	}
+                }
+                if(checkid == false) {
+                	JOptionPane.showMessageDialog(null,"id khong ton tai !");
+                	return;
+                }
+                int result = JOptionPane.showConfirmDialog(null,
+                        "Bạn có chắc muốn xoa Vehicle id: " +idVehicle,
+                        "Xác nhận",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if(result == JOptionPane.YES_OPTION){
+                	ddd.delete(idVehicle);
+//                    CustomerDAO.getInstance().delete(idcs);
+                    ClassLoaddataVehicle();
+                }
+                RefeshVehicle();
+			}
+		});
+		btn_delete.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btn_delete.setBackground(new Color(66, 165, 243));
+		btn_delete.setBounds(500, 270, 129, 29);
+		add(btn_delete);
 		
 		
 

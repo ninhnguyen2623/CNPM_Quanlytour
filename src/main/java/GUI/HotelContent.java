@@ -383,6 +383,10 @@ public class HotelContent extends JPanel {
         btnAddHotel = new JButton("Add");
         btnAddHotel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if(txtIdHotel.getText().equals("")|| txtNameHotel.getText().equals("") || txtAddressHotel.getText().equals("")|| txtPhoneHotel.getText().equals("")|| txtWebHotel.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                    return;
+                }
                 String idString = txtIdHotel.getText().trim();
                 int idhotel = 0;
                 if(isNumeric(idString)==false) {
@@ -407,11 +411,8 @@ public class HotelContent extends JPanel {
                 		checkid = true;
                 	}
                 }
-                if(idString == "" || nameString==""|| addressString==""|| telhotel==""|| webString=="") {
-                    JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
-                    return;
-                }
-                else if(checkid == true) {
+                
+                if(checkid == true) {
                 	 JOptionPane.showMessageDialog(null, "id đã tồn tại vui lòng nhập id mới !");
                 	 return;
                 }
@@ -449,6 +450,10 @@ public class HotelContent extends JPanel {
         btnDeleteHotel = new JButton("Delete");
         btnDeleteHotel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if(txtIdHotel.getText().equals("")) {
+            		JOptionPane.showMessageDialog(null, "id không được để trống !");
+                	return;
+            	}
                 String idString = txtIdHotel.getText().trim();
                 int idhotel = Integer.parseInt(idString);
                 HotelBUS hotelBUS = new HotelBUS();
@@ -488,6 +493,10 @@ public class HotelContent extends JPanel {
         btnAddHotel = new JButton("Update");
         btnAddHotel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if(txtIdHotel.getText().equals("")|| txtNameHotel.getText().equals("") || txtAddressHotel.getText().equals("")|| txtPhoneHotel.getText().equals("")|| txtWebHotel.getText().equals("")) {
+                	JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                	return;
+                }
             	String idString = txtIdHotel.getText().trim();
                 int idhotel = 0;
                 if(isNumeric(idString)==false) {
@@ -513,11 +522,8 @@ public class HotelContent extends JPanel {
                 		checkid = true;
                 	}
                 }
-                if(idString == "" || nameString==""|| addressString==""|| telhotel==""|| webString=="") {
-                	JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
-                	return;
-                }
-                else if(checkid == false) {
+                
+                if(checkid == false) {
                 	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhâp id mới !");
                 	return;
                 }
@@ -605,6 +611,7 @@ public class HotelContent extends JPanel {
             model.addRow(new Object[] {
                     itemHotel.getHotel_id(),itemHotel.getHotel_name(),itemHotel.getAddress(),itemHotel.getTel(),itemHotel.getWebsite(),itemHotel.getStar(),itemHotel.getRegion_code()
             });
+       
         }
         hotelListTable = new JTable();
         hotelListTable.setModel(model);
@@ -628,6 +635,7 @@ public class HotelContent extends JPanel {
         int i = 0;
         for(HotelDTO itemHotel : htDTO) {
         	i++;
+            System.out.println(i);
         }
         txtIdHotel.setText(Integer.toString(i+1));
         ClassLoaddataHotel();

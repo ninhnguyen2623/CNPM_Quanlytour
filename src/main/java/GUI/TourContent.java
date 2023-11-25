@@ -875,7 +875,7 @@ public class TourContent extends JPanel{
             return;
         }
 
-        if (txtIdTour.getText() == "" || txtNameTour.getText() == "" || txtSchedule.getText() == "" || txtPriceTour.getText() == "" || !isNumeric(txtIdTour.getText()) || arrPlaces.size() ==0) {
+        if (txtIdTour.getText().equals("") || txtNameTour.getText().equals("")|| txtSchedule.getText().equals("") || txtPriceTour.getText().equals("") || !isNumeric(txtIdTour.getText()) || arrPlaces.size() ==0) {
             JOptionPane.showMessageDialog(null,"Dữ liệu không được để trống hoặc sai sót!!");
             return;
         }

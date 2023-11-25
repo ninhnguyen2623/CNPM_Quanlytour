@@ -411,7 +411,7 @@ public class CusContent extends JPanel{
         btnAddCus = new JButton("Add");
         btnAddCus.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	if(txtIdCus.getText() == "" || txtNameCus.getText() == "" || txtEmailCus.getText() == "" || txtPhoneCus.getText() == "" ) {
+            	if(txtIdCus.getText().equals("")|| txtNameCus.getText().equals("") || txtEmailCus.getText().equals("")|| txtPhoneCus.getText().equals("") ) {
             		JOptionPane.showMessageDialog(null, "dữ liệu không được để trống !");
             		return;
             	}
@@ -486,15 +486,26 @@ public class CusContent extends JPanel{
         btnDeleteCus = new JButton("Delete");
         btnDeleteCus.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	CustomerBUS customerBUS = new CustomerBUS();
                 String idString = txtIdCus.getText().trim();
                 int idcs = Integer.parseInt(idString);
+                boolean checkidhotel = false;
+                ArrayList<CustomerDTO> csmdto = customerBUS.getAll();
+                for(CustomerDTO jjjjdfe:csmdto) {
+                	if(jjjjdfe.getCustomer_id()==idcs) {
+                		checkidhotel = true;
+                	}
+                }
+                if(checkidhotel==false) {
+                	 JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhập id mới !");
+                	 return;
+                }
                 int result = JOptionPane.showConfirmDialog(null,
                         "Bạn có chắc muốn xoa Customer id: " +idcs,
                         "Xác nhận",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE);
                 if(result == JOptionPane.YES_OPTION){
-                	CustomerBUS customerBUS = new CustomerBUS();
                 	customerBUS.delete(idcs);
 //                    CustomerDAO.getInstance().delete(idcs);
                     ClassLoaddataCustomer();
@@ -511,7 +522,7 @@ public class CusContent extends JPanel{
         btnAddCus = new JButton("Update");
         btnAddCus.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	if(txtIdCus.getText() == "" || txtNameCus.getText() == "" || OldCus.getDate() == null || txtEmailCus.getText() == "" || txtPhoneCus.getText() == "") {
+            	if(txtIdCus.getText().equals("")|| txtNameCus.getText().equals("")|| OldCus.getDate() == null || txtEmailCus.getText().equals("")|| txtPhoneCus.getText().equals("")) {
             		JOptionPane.showMessageDialog(null, "dữ liệu không được để trống !");
             		return;
             	}
@@ -626,12 +637,12 @@ public class CusContent extends JPanel{
     	ArrayList<CustomerDTO> arrCustomer = customerBUS.getAll();
     	int i = 0;
         for(CustomerDTO itemCustomer : arrCustomer ) {
+        	i++;
             model.addRow(new Object[] {
                     itemCustomer.getCustomer_id(),itemCustomer.getCustomer_name(),itemCustomer.getTel(),itemCustomer.getBirthday(),itemCustomer.getEmail(),itemCustomer.getCreate_at()
             });
-            i++;
+            System.out.println(i);
         }
-        System.out.println(i);
         cusListTable = new JTable();
         cusListTable.setModel(model);
         sclListCus.setViewportView(cusListTable);
@@ -681,7 +692,6 @@ public class CusContent extends JPanel{
     	ArrayList<CustomerDTO> arrCustomer = customerBUS.getAll();
     	int i = 0;
         for(CustomerDTO itemCustomer : arrCustomer ) {
-        	System.out.println(i);
         	i++;
         }
         txtIdCus.setText(String.valueOf(i+1));

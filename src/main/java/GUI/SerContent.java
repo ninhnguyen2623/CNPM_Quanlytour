@@ -187,7 +187,7 @@ public class SerContent extends JPanel {
         });
         lblSearchSer.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
         pnlIconSrc_Txt.add(lblSearchSer, BorderLayout.EAST);
-//		lblSearchSer.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/search.png"))));
+		lblSearchSer.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(Manager.class.getResource("../images/search.png"))));
         lblSearchSer.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         panel = new JPanel();
@@ -310,6 +310,10 @@ public class SerContent extends JPanel {
         btnAddSer = new JButton("Add");
         btnAddSer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if(txtIdSer.getText().equals("")|| txtNameSer.getText().equals("")||txtPriceSer.getText().equals("") ) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                    return;
+                }
                 String idString = txtIdSer.getText().trim();
                 int idser = Integer.parseInt(idString);
                 String nameserString = txtNameSer.getText();
@@ -323,11 +327,10 @@ public class SerContent extends JPanel {
                 		checkid = true;
                 	}
                 }
-                if(nameserString==""|| serpriceString=="" ) {
-                    JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
-                }
-                else if(checkid == true) {
+                
+                if(checkid == true) {
                 	JOptionPane.showMessageDialog(null, "id đã tồn tại vui lòng nhập id mới !");
+                	return;
                 }
                 else {
                     ServiceDTO serviceDTO = new ServiceDTO(idser,nameserString,priceser);
@@ -354,6 +357,10 @@ public class SerContent extends JPanel {
         btnDeleteSer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String idString = txtIdSer.getText().trim();
+                if(txtIdSer.getText().equals("")) {
+                	JOptionPane.showMessageDialog(null, "id không được để trống !");
+                	return;
+                }
                 int idser = Integer.parseInt(idString);
                 ServiceBUS serviceBUS = new ServiceBUS(); 
                 Boolean checkid = false;
@@ -365,6 +372,7 @@ public class SerContent extends JPanel {
                 }
                 if(checkid == false) {
                 	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhập id mới !");
+                	return;
                 }
                 else {
                 	int result = JOptionPane.showConfirmDialog(null,
@@ -415,7 +423,7 @@ public class SerContent extends JPanel {
                 		checkid = true;
                 	}
                 }
-                if(nameserString==""|| serpriceString=="" ) {
+                if(txtIdSer.getText().equals("")|| txtNameSer.getText().equals("")||txtPriceSer.getText().equals("") ) {
                 	JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
                 }
                 else if(checkid == false) {

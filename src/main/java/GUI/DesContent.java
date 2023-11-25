@@ -354,6 +354,10 @@ public class DesContent extends JPanel{
         btnAddDes = new JButton("Add");
         btnAddDes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	if(txtIdDes.getText().equals("")|| txtNameDes.getText().equals("")|| txtAddressDes.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
+                    return;
+                }
                 String idString = txtIdDes.getText().trim();
                 int iddes = Integer.parseInt(idString);
                 String namedesString = txtNameDes.getText();
@@ -369,11 +373,10 @@ public class DesContent extends JPanel{
                 		checkid = true;
                 	}
                 }
-                if(namedesString==""|| describeDesString =="" || addressDesString == "" ) {
-                    JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
-                }
-                else if(checkid == true) {
+                
+                if(checkid == true) {
                 	 JOptionPane.showMessageDialog(null, "id đã tồn tại vui lòng nhập id mới !");
+                	 return;
                 }
                 else {
                     PlaceDTO PlaceDTO = new PlaceDTO(iddes,namedesString,describeDesString,valuecoderegion,addressDesString);
