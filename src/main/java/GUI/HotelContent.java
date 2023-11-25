@@ -403,7 +403,9 @@ public class HotelContent extends JPanel {
                 Boolean checkid = false;
                 ArrayList<HotelDTO> kjkjk = hotelBUS.getAll();
                 for(HotelDTO iiii: kjkjk) {
-                	checkid = true;
+                	if(iiii.getHotel_id()==idhotel) {
+                		checkid = true;
+                	}
                 }
                 if(idString == "" || nameString==""|| addressString==""|| telhotel==""|| webString=="") {
                     JOptionPane.showMessageDialog(null, "Bạn chưa nhập đủ thông tin !");
@@ -411,6 +413,7 @@ public class HotelContent extends JPanel {
                 }
                 else if(checkid == true) {
                 	 JOptionPane.showMessageDialog(null, "id đã tồn tại vui lòng nhập id mới !");
+                	 return;
                 }
                 else if(checkPhone(telhotel)== false) {
                 	JOptionPane.showMessageDialog(null, "Số điện thoại không đúng !");
@@ -458,6 +461,7 @@ public class HotelContent extends JPanel {
                 }
                 if(checkid == false) {
                 	JOptionPane.showMessageDialog(null, "id không tồn tại vui lòng nhâp id mới !");
+                	return;
                 }
                 else {
                 	int result = JOptionPane.showConfirmDialog(null,
@@ -488,6 +492,7 @@ public class HotelContent extends JPanel {
                 int idhotel = 0;
                 if(isNumeric(idString)==false) {
                 	JOptionPane.showMessageDialog(null, "ID phải là số !");
+                	return;
                 }
                 if(isNumeric(idString)==true) {
                     idhotel = Integer.parseInt(idString.trim());

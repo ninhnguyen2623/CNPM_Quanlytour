@@ -21,6 +21,8 @@ import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -214,6 +216,17 @@ public class SignIn extends JFrame {
 		txtPass.requestFocusInWindow();
 		txtPass.setBorder(null);
 		pnlSignIn.add(txtPass);
+		txtPass.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					Manager mag = new Manager();
+					JOptionPane.showMessageDialog(null, "Dang nhap thanh cong");
+					dispose();
+					mag.setVisible(true);
+				}
+			}
+		});
 		
 		sepPass = new JSeparator();
 		sepPass.setBackground(new Color(0, 0, 0));

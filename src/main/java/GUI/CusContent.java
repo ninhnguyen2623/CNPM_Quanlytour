@@ -626,11 +626,12 @@ public class CusContent extends JPanel{
     	ArrayList<CustomerDTO> arrCustomer = customerBUS.getAll();
     	int i = 0;
         for(CustomerDTO itemCustomer : arrCustomer ) {
-        	i++;
             model.addRow(new Object[] {
                     itemCustomer.getCustomer_id(),itemCustomer.getCustomer_name(),itemCustomer.getTel(),itemCustomer.getBirthday(),itemCustomer.getEmail(),itemCustomer.getCreate_at()
             });
+            i++;
         }
+        System.out.println(i);
         cusListTable = new JTable();
         cusListTable.setModel(model);
         sclListCus.setViewportView(cusListTable);
@@ -680,6 +681,7 @@ public class CusContent extends JPanel{
     	ArrayList<CustomerDTO> arrCustomer = customerBUS.getAll();
     	int i = 0;
         for(CustomerDTO itemCustomer : arrCustomer ) {
+        	System.out.println(i);
         	i++;
         }
         txtIdCus.setText(String.valueOf(i+1));
