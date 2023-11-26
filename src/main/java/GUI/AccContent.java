@@ -514,6 +514,7 @@ public class AccContent extends JPanel {
 
             UserBUS ubs = new UserBUS();
             JOptionPane.showMessageDialog(null,ubs.add(udo));
+            loadAccData();
         });
 
         btnUpdateAcc.addActionListener(e -> {
@@ -548,6 +549,7 @@ public class AccContent extends JPanel {
 
             UserBUS ubs = new UserBUS();
             JOptionPane.showMessageDialog(null,ubs.update(udo));
+            loadAccData();
         });
 
         btnDeleteAcc.addActionListener(e -> {
@@ -558,6 +560,7 @@ public class AccContent extends JPanel {
 
             UserBUS ubs = new UserBUS();
             JOptionPane.showMessageDialog(null,ubs.delete(Integer.parseInt(txtIdAcc.getText())));
+            loadAccData();
         });
 
         btnRefreshAcc.addActionListener(e -> {

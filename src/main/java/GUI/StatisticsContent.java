@@ -492,17 +492,24 @@ public class StatisticsContent extends JPanel {
 		btnShowExcel = new JButton("Export excel");
 		btnShowExcel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(BookingTable.getModel() == null) {
+					JOptionPane.showMessageDialog(null, "vui lòng chọn thông tin thống kê trước khi xuất excel !");
+					return;
+				}
 				 TableModel model2 = BookingTable.getModel();
 	                ArrayList<Integer> arrayListIdtour = new ArrayList<>();
 	                int rowCount = model2.getRowCount();
 	                System.out.println(rowCount);
+	                boolean checktable = true;
 	                for (int row = 0; row < rowCount; row++) {  
 	                	    int id = Integer.parseInt(model2.getValueAt(row, 0).toString());
 	                	    arrayListIdtour.add(id);	
+	                	    checktable = false;
 //	                	    System.out.println(id);
 	                }
 	                
 	                try {
+	                
 	                    JFileChooser jfile = new JFileChooser();
 	                    jfile.setSelectedFile(new File("untitled.xls"));
 

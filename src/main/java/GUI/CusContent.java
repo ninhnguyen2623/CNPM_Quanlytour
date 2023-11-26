@@ -459,7 +459,7 @@ public class CusContent extends JPanel{
                 else {
                     CustomerDTO csCustomerDTO = new CustomerDTO(idcs,nameString,telcs,dateString,emailString,"");
                     int result = JOptionPane.showConfirmDialog(null,
-                            "Bạn có muốn them hotel  " +nameString,
+                            "Bạn có muốn them Khách hàng  " +nameString,
                             "Xác nhận",
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);

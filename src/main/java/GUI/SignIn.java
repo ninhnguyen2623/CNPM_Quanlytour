@@ -220,10 +220,86 @@ public class SignIn extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					Manager mag = new Manager();
-					JOptionPane.showMessageDialog(null, "Dang nhap thanh cong");
-					dispose();
-					mag.setVisible(true);
+					String username = txtUserName.getText();
+					String password = String.valueOf(txtPass.getPassword());
+					if(txtUserName.getText().equals("")) {
+						JOptionPane.showMessageDialog(null,"Không để trống tên đăng nhập !");
+						return;
+					}
+					if(password.equals("")) {
+						JOptionPane.showMessageDialog(null,"Không để trống mật khẩu !");
+						return;
+					}
+					//Kiem tra Db
+					UserBUS ubs = new UserBUS();
+					System.out.println(ubs.CheckUser(username,password));
+					if (ubs.CheckUser(username,password)) {
+						Manager mag;
+						JOptionPane.showMessageDialog(null,"Dang nhap thanh cong");
+						
+						UserDTO role = ubs.getByName(username);
+						if (role.getRole_id() == 1) {
+							mag = new Manager();
+							mag.setVisible(true);
+							
+						}
+						else if (role.getRole_id() == 2) {
+							mag = new Manager();
+							mag.getPnlMainContent().remove(mag.getPnlTourContent());
+							mag.getPnlListDetail().remove(mag.getPnlTourManager());
+							mag.getPnlListDetail().remove(mag.getPnlDesManager());
+							mag.getPnlListDetail().remove(mag.getPnlHotelManager());
+							mag.getPnlListDetail().remove(mag.getPnlVehicleManager());
+							mag.getPnlListDetail().remove(mag.getPnlSerManager());
+							mag.getPnlListDetail().remove(mag.getPnlAccManager());
+							mag.getPnlListDetail().remove(mag.getPnlStatistical());
+							mag.getPnlListDetail().remove(mag.getPnlBillManager());
+							mag.setVisible(true);
+						}
+						else if (role.getRole_id() == 3) {
+							mag = new Manager();
+							mag.getPnlMainContent().remove(mag.getPnlTourContent());
+							mag.getPnlListDetail().remove(mag.getPnlTourManager());
+							mag.getPnlListDetail().remove(mag.getPnlDesManager());
+							mag.getPnlListDetail().remove(mag.getPnlHotelManager());
+							mag.getPnlListDetail().remove(mag.getPnlAccManager());
+							mag.getPnlListDetail().remove(mag.getPnlSerManager());
+							mag.getPnlListDetail().remove(mag.getPnlBillManager());
+							mag.getPnlListDetail().remove(mag.getPnlCusManager());
+							mag.getPnlListDetail().remove(mag.getPnlVehicleManager());
+							mag.setVisible(true);
+						}
+						else if (role.getRole_id() == 4) {
+							mag = new Manager();
+//							mag.getPnlMainContent().remove(mag.getPnlTourContent());
+//							mag.getPnlListDetail().remove(mag.getPnlTourManager());
+//							mag.getPnlListDetail().remove(mag.getPnlDesManager());
+//							mag.getPnlListDetail().remove(mag.getPnlHotelManager());
+							mag.getPnlListDetail().remove(mag.getPnlAccManager());
+							mag.getPnlListDetail().remove(mag.getPnlSerManager());
+							mag.getPnlListDetail().remove(mag.getPnlStatistical());
+//							mag.getPnlListDetail().remove(mag.getPnlBillManager());
+							mag.getPnlListDetail().remove(mag.getPnlCusManager());
+							mag.setVisible(true);
+						}
+							
+						else {
+							mag = new Manager();
+							mag.getPnlMainContent().remove(mag.getPnlTourContent());
+							mag.getPnlListDetail().remove(mag.getPnlStatistical());
+							mag.getPnlListDetail().remove(mag.getPnlExportExcel());
+							mag.getPnlListDetail().remove(mag.getPnlAccManager());
+							mag.getPnlListDetail().remove(mag.getPnlSerManager());
+							mag.getPnlListDetail().remove(mag.getPnlBillManager());
+							mag.getPnlListDetail().remove(mag.getPnlCusManager());
+							mag.getPnlListDetail().remove(mag.getPnlVehicleManager());
+							mag.setVisible(true);
+						}
+						
+						dispose();
+					}else {
+						JOptionPane.showMessageDialog(null,"Sai Thong Tin");
+					}
 				}
 			}
 		});
@@ -339,9 +415,11 @@ public class SignIn extends JFrame {
 				mag.getPnlListDetail().remove(mag.getPnlTourManager());
 				mag.getPnlListDetail().remove(mag.getPnlDesManager());
 				mag.getPnlListDetail().remove(mag.getPnlHotelManager());
+				mag.getPnlListDetail().remove(mag.getPnlVehicleManager());
+				mag.getPnlListDetail().remove(mag.getPnlSerManager());
 				mag.getPnlListDetail().remove(mag.getPnlAccManager());
 				mag.getPnlListDetail().remove(mag.getPnlStatistical());
-				mag.getPnlListDetail().remove(mag.getPnlExportExcel());
+				mag.getPnlListDetail().remove(mag.getPnlBillManager());
 				mag.setVisible(true);
 			}
 			else if (role.getRole_id() == 3) {
@@ -354,8 +432,23 @@ public class SignIn extends JFrame {
 				mag.getPnlListDetail().remove(mag.getPnlSerManager());
 				mag.getPnlListDetail().remove(mag.getPnlBillManager());
 				mag.getPnlListDetail().remove(mag.getPnlCusManager());
+				mag.getPnlListDetail().remove(mag.getPnlVehicleManager());
 				mag.setVisible(true);
 			}
+			else if (role.getRole_id() == 4) {
+				mag = new Manager();
+//				mag.getPnlMainContent().remove(mag.getPnlTourContent());
+//				mag.getPnlListDetail().remove(mag.getPnlTourManager());
+//				mag.getPnlListDetail().remove(mag.getPnlDesManager());
+//				mag.getPnlListDetail().remove(mag.getPnlHotelManager());
+				mag.getPnlListDetail().remove(mag.getPnlAccManager());
+				mag.getPnlListDetail().remove(mag.getPnlSerManager());
+				mag.getPnlListDetail().remove(mag.getPnlStatistical());
+//				mag.getPnlListDetail().remove(mag.getPnlBillManager());
+				mag.getPnlListDetail().remove(mag.getPnlCusManager());
+				mag.setVisible(true);
+			}
+				
 			else {
 				mag = new Manager();
 				mag.getPnlMainContent().remove(mag.getPnlTourContent());
